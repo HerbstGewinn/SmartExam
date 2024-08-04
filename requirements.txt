@@ -61,7 +61,7 @@ pytesseract==0.3.10
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 pytz==2024.1
-pywin32==306
+#pywin32==306; removed because of streamlit problems
 pyzmq==26.0.3
 referencing==0.35.1
 requests==2.32.3
