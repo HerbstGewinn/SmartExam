@@ -18,7 +18,9 @@ st.set_page_config(page_title="SmartExam Creator", page_icon="📝")
 dotenv.load_dotenv()
 
 # Load your OpenAI API key from the environment variable
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+# OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")   Use this when taking the env variables
+
+OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]  #And this secrets, when using streamlit
 
 openai_models = [
     "gpt-4o-mini",
