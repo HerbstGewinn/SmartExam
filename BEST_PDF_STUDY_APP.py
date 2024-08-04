@@ -230,7 +230,7 @@ def pdf_upload_app():
         else:
             st.error("Failed to parse the generated questions. Please check the OpenAI response.")
     else:
-        st.warning("Please upload a PDF to generate the exam content.")
+        st.warning("Please upload a PDF to generate the interactive exam.")
 
 def submit_answer(i, quiz_data):
     user_choice = st.session_state[f"user_choice_{i}"]
