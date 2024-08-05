@@ -150,7 +150,7 @@ def main():
     
     app_mode_options = ["Upload PDF & Generate Questions", "Take the Quiz", "Download as PDF"]
     st.session_state.app_mode = st.sidebar.selectbox("Choose the app mode", app_mode_options, index=app_mode_options.index(st.session_state.app_mode))
-
+    st.video("https://youtu.be/zE3ToJLLSIY")
     st.sidebar.markdown("## About")
     st.sidebar.info(
         """
@@ -177,7 +177,6 @@ def main():
         Built with ❤️ using OpenAI's GPT-4o-mini.
 
         **Connect with me on [LinkedIn](https://www.linkedin.com/in/laurin-herbst/).**
-        **st.video("https://youtu.be/zE3ToJLLSIY")**
         """
     )
     
