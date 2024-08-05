@@ -177,9 +177,10 @@ def main():
         Built with ❤️ using OpenAI's GPT-4o-mini.
 
         **Connect with me on [LinkedIn](https://www.linkedin.com/in/laurin-herbst/).**
+        **st.video("https://youtu.be/zE3ToJLLSIY")**
         """
     )
-    st.video("https://youtu.be/zE3ToJLLSIY")
+    
     
     if st.session_state.app_mode == "Upload PDF & Generate Questions":
         pdf_upload_app()
