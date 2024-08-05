@@ -147,10 +147,10 @@ def main():
         st.session_state.app_mode = "Upload PDF & Generate Questions"
         
     st.sidebar.title("SmartExam Creator")
-    
+    st.sidebar.video("https://youtu.be/zE3ToJLLSIY")
     app_mode_options = ["Upload PDF & Generate Questions", "Take the Quiz", "Download as PDF"]
     st.session_state.app_mode = st.sidebar.selectbox("Choose the app mode", app_mode_options, index=app_mode_options.index(st.session_state.app_mode))
-    st.video("https://youtu.be/zE3ToJLLSIY")
+    
     st.sidebar.markdown("## About")
     st.sidebar.info(
         """
