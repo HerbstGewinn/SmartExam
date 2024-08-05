@@ -150,13 +150,13 @@ def main():
     
     app_mode_options = ["Upload PDF & Generate Questions", "Take the Quiz", "Download as PDF"]
     st.session_state.app_mode = st.sidebar.selectbox("Choose the app mode", app_mode_options, index=app_mode_options.index(st.session_state.app_mode))
-    st.sidebar.video("https://youtu.be/zE3ToJLLSIY")
+    
     st.sidebar.markdown("## About")
     st.sidebar.info(
         """
         **SmartExam Creator** is an innovative tool designed to help students and educators alike. 
         Upload your lecture notes or handwritten notes to create personalized multiple-choice exams.
-
+        st.sidebar.video("https://youtu.be/zE3ToJLLSIY")
         **Story:**
         This app was developed with the vision of making exam preparation easier and more interactive for students. 
         Leveraging the power new AI models, it aims to transform traditional study methods into a more engaging and 
