@@ -1,4 +1,12 @@
 import streamlit as st
+
+# This must be the first Streamlit command
+st.set_page_config(page_title="SmartExam Creator", page_icon="📝")
+
+import argon2
+from st_supabase_connection import SupabaseConnection
+from stqdm import stqdm
+from supabase import Client
 from openai import OpenAI
 import dotenv
 import os
@@ -10,26 +18,192 @@ import pandas as pd
 from fpdf import FPDF
 import base64
 
-#this is the potential part for the upcoming paywall
+__version__ = "1.1.0"
+
+# Authentication Utilities
+def validate_password(password: str, min_length: int = 8, special_chars: str = "@$!%*?&_^#- ") -> bool:
+    required_chars = [
+        lambda s: any(x.isupper() for x in s),
+        lambda s: any(x.islower() for x in s),
+        lambda s: any(x.isdigit() for x in s),
+        lambda s: any(x in special_chars for x in s),
+    ]
+    return len(password) >= min_length and all(check(password) for check in required_chars)
+
+def login_success(message: str, username: str) -> None:
+    st.success(message)
+    st.session_state["authenticated"] = True
+    st.session_state["username"] = username
+    st.rerun()  # Force immediate rerun to update UI
+
+# An argon2 version of my previous functions that used bcrypt
+class Authenticator(argon2.PasswordHasher):
+    """A class derived from argon2.PasswordHasher to provide functionality for the authentication process"""
+
+    def generate_pwd_hash(self, password: str):
+        """Generates a hashed version of the provided password using argon2."""
+        return password if password.startswith("$argon2id$") else self.hash(password)
+
+    def verify_password(self, hashed_password, plain_password):
+        """Verifies if a plaintext password matches a hashed one using argon2."""
+        try:
+            if self.verify(hashed_password, plain_password):
+                return True
+        except argon2.exceptions.VerificationError:
+            return False
+
+def login_form(
+    *,
+    title: str = "Authentication",
+    user_tablename: str = "users",
+    username_col: str = "username",
+    password_col: str = "password",
+    constrain_password: bool = True,
+    create_title: str = "Create new account :baby: ",
+    login_title: str = "Login to existing account :prince: ",
+    allow_guest: bool = False,  # Set to False to disable guest login
+    allow_create: bool = True,
+    create_username_label: str = "Create an email username",
+    create_username_placeholder: str = None,
+    create_username_help: str = None,
+    create_password_label: str = "Create a password",
+    create_password_placeholder: str = None,
+    create_password_help: str = "Password cannot be recovered if lost",
+    create_submit_label: str = "Create account",
+    create_success_message: str = "Account created and logged-in :tada:",
+    login_username_label: str = "Enter your email username",
+    login_username_placeholder: str = None,
+    login_username_help: str = None,
+    login_password_label: str = "Enter your password",
+    login_password_placeholder: str = None,
+    login_password_help: str = None,
+    login_submit_label: str = "Login",
+    login_success_message: str = "Login succeeded :tada:",
+    login_error_message: str = "Wrong username/password :x: ",
+    password_constraint_check_fail_message: str = "Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&_^#- ).",
+) -> Client:
+    """Creates a user login form in Streamlit apps.
+
+    Connects to a Supabase DB using SUPABASE_URL and SUPABASE_KEY Streamlit secrets.
+    Sets session_state["authenticated"] to True if the login is successful.
+    Sets session_state["username"] to provided username or new or existing user.
+
+    Returns:
+        Supabase.client: The client instance for performing downstream supabase operations.
+    """
+
+    # Initialize the Supabase connection
+    client = st.connection(name="supabase", type=SupabaseConnection)
+    auth = Authenticator()
+
+    def rehash_pwd_in_db(password, username) -> str:
+        """A procedure to rehash given password in the db if necessary."""
+        hashed_password = auth.generate_pwd_hash(password)
+        client.table(user_tablename).update({password_col: hashed_password}).match(
+            {username_col: username}
+        ).execute()
+
+        return hashed_password
+
+    # User Authentication
+    if "authenticated" not in st.session_state:
+        st.session_state["authenticated"] = False
+
+    if "username" not in st.session_state:
+        st.session_state["username"] = None
+
+    # Display authentication form only if not authenticated
+    if not st.session_state["authenticated"]:
+        with st.expander(title, expanded=True):
+            if allow_create:
+                create_tab, login_tab = st.tabs(
+                    [
+                        create_title,
+                        login_title,
+                    ]
+                )
+            else:
+                login_tab = st.container()
+
+            # Create new account
+            if allow_create:
+                with create_tab:
+                    with st.form(key="create"):
+                        username = st.text_input(
+                            label=create_username_label,
+                            placeholder=create_username_placeholder,
+                            help=create_username_help,
+                        )
+
+                        password = st.text_input(
+                            label=create_password_label,
+                            placeholder=create_password_placeholder,
+                            help=create_password_help,
+                            type="password",
+                        )
+                        hashed_password = auth.generate_pwd_hash(password)
+                        if st.form_submit_button(label=create_submit_label, type="primary"):
+                            if constrain_password and not validate_password(password):
+                                st.error(password_constraint_check_fail_message)
+                                st.stop()
+
+                            try:
+                                client.table(user_tablename).insert(
+                                    {username_col: username, password_col: hashed_password}
+                                ).execute()
+                            except Exception as e:
+                                st.error(e.message)
+                            else:
+                                login_success(create_success_message, username)
+
+            # Login to existing account
+            with login_tab:
+                with st.form(key="login"):
+                    username = st.text_input(
+                        label=login_username_label,
+                        placeholder=login_username_placeholder,
+                        help=login_username_help,
+                    )
+
+                    password = st.text_input(
+                        label=login_password_label,
+                        placeholder=login_password_placeholder,
+                        help=login_password_help,
+                        type="password",
+                    )
+
+                    if st.form_submit_button(label=login_submit_label, type="primary"):
+                        response = (
+                            client.table(user_tablename)
+                            .select(f"{username_col}, {password_col}")
+                            .eq(username_col, username)
+                            .execute()
+                        )
+
+                        if len(response.data) > 0:
+                            db_password = response.data[0]["password"]
+
+                            if not db_password.startswith("$argon2id$"):
+                                # Hash plaintext password and update the db
+                                db_password = rehash_pwd_in_db(db_password, username)
+
+                            if auth.verify_password(db_password, password):
+                                # Verify hashed password
+                                login_success(login_success_message, username)
+                                # This step is recommended by the argon2-cffi documentation
+                                if auth.check_needs_rehash(db_password):
+                                    _ = rehash_pwd_in_db(password, username)
+                            else:
+                                st.error(login_error_message)
+
+                        else:
+                            st.error(login_error_message)
+
+    return client
 
 
-st.set_page_config(page_title="SmartExam Creator", page_icon="📝")
-
-dotenv.load_dotenv()
-
-# Load your OpenAI API key from the environment variable
-# OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")   Use this when taking the env variables
-
-OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]  #And this secrets, when using streamlit
-
-openai_models = [
-    "gpt-4o-mini",
-    "gpt-4-turbo",
-    "gpt-3.5-turbo-16k",
-]
-
-# Function to query and stream the response from the LLM
-def stream_llm_response(messages, model_params, api_key=OPENAI_API_KEY):
+# Main app functions
+def stream_llm_response(messages, model_params, api_key):
     client = OpenAI(api_key=api_key)
     response = client.chat.completions.create(
         model=model_params["model"] if "model" in model_params else "gpt-4o",
@@ -46,7 +220,7 @@ def extract_text_from_pdf(pdf_file):
         text += page.extract_text() + "\n"
     return text
 
-def summarize_text(text, api_key=OPENAI_API_KEY):
+def summarize_text(text, api_key=st.secrets["OPENAI_API_KEY"]):
     prompt = (
         "Please summarize the following text to be concise and to the point:\n\n" + text
     )
@@ -70,7 +244,7 @@ def chunk_text(text, max_tokens=3000):
         chunks.append(chunk)
     return chunks
 
-def generate_mc_questions(content_text, api_key=OPENAI_API_KEY):
+def generate_mc_questions(content_text, api_key=st.secrets["OPENAI_API_KEY"]):
     prompt = (
         "You are a professor in the field of Computational System Biology and should create an exam on the topic of the Input PDF. "
         "Using the attached lecture slides (please analyze thoroughly), create a Master-level multiple-choice exam. The exam should contain multiple-choice and single-choice questions, "
@@ -86,7 +260,6 @@ def generate_mc_questions(content_text, api_key=OPENAI_API_KEY):
 
 def parse_generated_questions(response):
     try:
-        # Find the JSON part within the response string
         json_start = response.find('[')
         json_end = response.rfind(']') + 1
         json_str = response[json_start:json_end]
@@ -126,99 +299,113 @@ class PDF(FPDF):
 def generate_pdf(questions):
     pdf = PDF()
     pdf.add_page()
-    
+
     for i, q in enumerate(questions):
         question = f"Q{i+1}: {q['question']}"
         pdf.chapter_title(question)
-        
+
         choices = "\n".join(q['choices'])
         pdf.chapter_body(choices)
-        
+
         correct_answer = f"Correct answer: {q['correct_answer']}"
         pdf.chapter_body(correct_answer)
-        
+
         explanation = f"Explanation: {q['explanation']}"
         pdf.chapter_body(explanation)
 
     return pdf.output(dest="S").encode("latin1")
 
+# Integration with the main app
 def main():
-    if 'app_mode' not in st.session_state:
-        st.session_state.app_mode = "Upload PDF & Generate Questions"
+    # Authentication check
+    client = login_form()
+    
+    if st.session_state["authenticated"]:
+        # Initialize app_mode if it doesn't exist
+        if "app_mode" not in st.session_state:
+            st.session_state.app_mode = "Upload PDF & Generate Questions"
         
-    st.sidebar.title("SmartExam Creator")
-    
-    app_mode_options = ["Upload PDF & Generate Questions", "Take the Quiz", "Download as PDF"]
-    st.session_state.app_mode = st.sidebar.selectbox("Choose the app mode", app_mode_options, index=app_mode_options.index(st.session_state.app_mode))
-    
-    st.sidebar.markdown("## About")
-    st.sidebar.video("https://youtu.be/zE3ToJLLSIY")
-    st.sidebar.info(
-        """
-        **SmartExam Creator** is an innovative tool designed to help students and educators alike. 
-        Upload your lecture notes or handwritten notes to create personalized multiple-choice exams.
+        # Main app content
+        dotenv.load_dotenv()
+
+        # Load your OpenAI API key from the environment variable
+        OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]  # Use secrets, when using streamlit
+
+        openai_models = [
+            "gpt-4o-mini",
+            "gpt-4-turbo",
+            "gpt-3.5-turbo-16k",
+        ]
+
+        st.sidebar.title("SmartExam Creator")
         
-        **Story:**
-        This app was developed with the vision of making exam preparation easier and more interactive for students. 
-        Leveraging the power new AI models, it aims to transform traditional study methods into a more engaging and 
-        efficient process. Whether you're a student looking to test your knowledge or an educator seeking to create 
-        customized exams, SmartExam Creator is here to help.
-
-        **What makes SmartExam special ?**
-        Apart from other platforms that require costly subscriptions, this platform is designed from a STEM student
-        for all other students, but let us be honest, we do not have money for Subscriptions. That is why it is completely free for now.
-        I have designed the app as cost efficient as possible, so I can cover all business costs that are coming.  
+        app_mode_options = ["Upload PDF & Generate Questions", "Take the Quiz", "Download as PDF"]
+        st.session_state.app_mode = st.sidebar.selectbox("Choose the app mode", app_mode_options, index=app_mode_options.index(st.session_state.app_mode))
         
-        **Features:**
-        - Upload PDF documents
-        - Generate multiple-choice questions
-        - Take interactive quizzes
-        - Download generated exams as PDF
+        st.sidebar.markdown("## About")
+        st.sidebar.video("https://youtu.be/zE3ToJLLSIY")
+        st.sidebar.info(
+            """
+            **SmartExam Creator** is an innovative tool designed to help students and educators alike. 
+            Upload your lecture notes or handwritten notes to create personalized multiple-choice exams.
+            
+            **Story:**
+            This app was developed with the vision of making exam preparation easier and more interactive for students. 
+            Leveraging the power new AI models, it aims to transform traditional study methods into a more engaging and 
+            efficient process. Whether you're a student looking to test your knowledge or an educator seeking to create 
+            customized exams, SmartExam Creator is here to help.
 
-        Built with ❤️ using OpenAI's GPT-4o-mini.
+            **What makes SmartExam special ?**
+            Apart from other platforms that require costly subscriptions, this platform is designed from a STEM student
+            for all other students, but let us be honest, we do not have money for Subscriptions. That is why it is completely free for now.
+            I have designed the app as cost efficient as possible, so I can cover all business costs that are coming.  
+            
+            **Features:**
+            - Upload PDF documents
+            - Generate multiple-choice questions
+            - Take interactive quizzes
+            - Download generated exams as PDF
 
-        **Connect with me on [LinkedIn](https://www.linkedin.com/in/laurin-herbst/).**
-        """
-    )
-    
-    
-    if st.session_state.app_mode == "Upload PDF & Generate Questions":
-        pdf_upload_app()
-    elif st.session_state.app_mode == "Take the Quiz":
-        if 'mc_test_generated' in st.session_state and st.session_state.mc_test_generated:
-            if 'generated_questions' in st.session_state and st.session_state.generated_questions:
-                mc_quiz_app()
+            Built with ❤️ using OpenAI's GPT-4o-mini.
+
+            **Connect with me on [LinkedIn](https://www.linkedin.com/in/laurin-herbst/).**
+            """
+        )
+        
+        if st.session_state.app_mode == "Upload PDF & Generate Questions":
+            pdf_upload_app()
+        elif st.session_state.app_mode == "Take the Quiz":
+            if 'mc_test_generated' in st.session_state and st.session_state.mc_test_generated:
+                if 'generated_questions' in st.session_state and st.session_state.generated_questions:
+                    mc_quiz_app()
+                else:
+                    st.warning("No generated questions found. Please upload a PDF and generate questions first.")
             else:
-                st.warning("No generated questions found. Please upload a PDF and generate questions first.")
-        else:
-            st.warning("Please upload a PDF and generate questions first.")
-    elif st.session_state.app_mode == "Download as PDF":
-        download_pdf_app()
+                st.warning("Please upload a PDF and generate questions first.")
+        elif st.session_state.app_mode == "Download as PDF":
+            download_pdf_app()
 
 def pdf_upload_app():
-
     st.title("Upload Your Lecture - Create Your Test Exam")
     st.subheader("Show Us the Slides and We do the Rest")
 
     content_text = ""
     
-    # Initialize session state for messages
     if 'messages' not in st.session_state:
         st.session_state.messages = []
     
-    # PDF Upload
     uploaded_pdf = st.file_uploader("Upload a PDF document", type=["pdf"])
     if uploaded_pdf:
         pdf_text = extract_text_from_pdf(uploaded_pdf)
         content_text += pdf_text
         st.success("PDF content added to the session.")
     
-    if len(content_text) > 3000:  # Check if the content text is too large
-        content_text = summarize_text(content_text)  # Summarize if too large
+    if len(content_text) > 3000:
+        content_text = summarize_text(content_text)
 
     if content_text:
         st.info("Generating the exam from the uploaded content. It will take just a minute...")
-        chunks = chunk_text(content_text)  # Chunk the text if necessary
+        chunks = chunk_text(content_text)
         questions = []
         for chunk in chunks:
             response = generate_mc_questions(chunk)
@@ -250,7 +437,7 @@ def mc_quiz_app():
 
     questions = st.session_state.generated_questions
 
-    if questions:  # Ensure questions list is not empty
+    if questions:
         if 'answers' not in st.session_state:
             st.session_state.answers = [None] * len(questions)
             st.session_state.feedback = [None] * len(questions)
@@ -280,8 +467,6 @@ def mc_quiz_app():
                 </div>
             """, unsafe_allow_html=True)
 
-
-
 def download_pdf_app():
     st.title('Download Your Exam as PDF')
 
@@ -294,7 +479,7 @@ def download_pdf_app():
                 st.write(choice)
             st.write(f"**Correct answer:** {q['correct_answer']}")
             st.write(f"**Explanation:** {q['explanation']}")
-            st.write("---")  # Separator line
+            st.write("---")
 
         pdf_bytes = generate_pdf(questions)
         st.download_button(
