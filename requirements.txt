@@ -126,5 +126,5 @@ uuid==1.30
 validators==0.33.0
 watchdog==4.0.1
 wcwidth==0.2.13
-websockets==10.0
+websockets==11.0
 zipp==3.20.0
