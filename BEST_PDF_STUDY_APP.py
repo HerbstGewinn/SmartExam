@@ -416,7 +416,7 @@ def pdf_upload_app():
             st.session_state.generated_questions = questions
             st.session_state.content_text = content_text
             st.session_state.mc_test_generated = True
-            st.success("The game has been successfully created! Change the left Sidepanel menu to solve your Exam !")
+            st.success("The game has been successfully created. Change the left Sidepanel menu to solve your Exam !")
         else:
             st.error("Failed to parse the generated questions. Please check the OpenAI response.")
     else:
