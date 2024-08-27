@@ -63,7 +63,7 @@ def login_form(
     login_title: str = "Login to existing account :prince: ",
     allow_guest: bool = False,  # Set to False to disable guest login
     allow_create: bool = True,
-    create_username_label: str = "Create an email username",
+    create_username_label: str = "Write your Email address",
     create_username_placeholder: str = None,
     create_username_help: str = None,
     create_password_label: str = "Create a password",
@@ -71,7 +71,7 @@ def login_form(
     create_password_help: str = "Password cannot be recovered if lost",
     create_submit_label: str = "Create account",
     create_success_message: str = "Account created and logged-in :tada:",
-    login_username_label: str = "Enter your email username",
+    login_username_label: str = "Write your Email address",
     login_username_placeholder: str = None,
     login_username_help: str = None,
     login_password_label: str = "Enter your password",
