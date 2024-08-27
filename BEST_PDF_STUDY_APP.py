@@ -63,7 +63,7 @@ def login_form(
     login_title: str = "Login to existing account :prince: ",
     allow_guest: bool = False,  # Set to False to disable guest login
     allow_create: bool = True,
-    create_username_label: str = "Enter your Email address",
+    create_username_label: str = "Create an email username",
     create_username_placeholder: str = None,
     create_username_help: str = None,
     create_password_label: str = "Create a password",
@@ -71,7 +71,7 @@ def login_form(
     create_password_help: str = "Password cannot be recovered if lost",
     create_submit_label: str = "Create account",
     create_success_message: str = "Account created and logged-in :tada:",
-    login_username_label: str = "Enter your Email address",
+    login_username_label: str = "Enter your email username",
     login_username_placeholder: str = None,
     login_username_help: str = None,
     login_password_label: str = "Enter your password",
@@ -246,7 +246,7 @@ def chunk_text(text, max_tokens=3000):
 
 def generate_mc_questions(content_text, api_key=st.secrets["OPENAI_API_KEY"]):
     prompt = (
-        "You are a professor in the field of Computational System Biology and should create an exam on the topic of the Input PDF. "
+        "You are a professor in the field of Computational System Biology and should create an exam on the topic of the Input PDF."
         "Using the attached lecture slides (please analyze thoroughly), create a Master-level multiple-choice exam. The exam should contain multiple-choice and single-choice questions, "
         "appropriately marked so that students know how many options to select. Create 30 realistic exam questions covering the entire content. Provide the output in JSON format. "
         "The JSON should have the structure: [{'question': '...', 'choices': ['...'], 'correct_answer': '...', 'explanation': '...'}, ...]. Ensure the JSON is valid and properly formatted."
@@ -416,20 +416,26 @@ def pdf_upload_app():
             st.session_state.generated_questions = questions
             st.session_state.content_text = content_text
             st.session_state.mc_test_generated = True
-            st.success("The game has been successfully generated. Select the Quiz on the left Sidebar. ")
+            st.success("The game has been successfully created! Switch the Sidebar Panel to solve the exam.")
         else:
             st.error("Failed to parse the generated questions. Please check the OpenAI response.")
     else:
         st.warning("Please upload a PDF to generate the interactive exam.")
 
 def submit_answer(i, quiz_data):
-    user_choice = st.session_state[f"user_choice_{i}"]
+    user_choice = st.session_state.get(f"user_choice_{i}", None)
+    if user_choice is None:
+        st.error("Please select an answer.")
+        return
+
     st.session_state.answers[i] = user_choice
-    if user_choice == quiz_data['correct_answer']:
+
+    correct_answer = quiz_data['correct_answer']
+    if user_choice == correct_answer:
         st.session_state.feedback[i] = ("Correct", quiz_data.get('explanation', 'No explanation available'))
         st.session_state.correct_answers += 1
     else:
-        st.session_state.feedback[i] = ("Incorrect", quiz_data.get('explanation', 'No explanation available'), quiz_data['correct_answer'])
+        st.session_state.feedback[i] = ("Incorrect", quiz_data.get('explanation', 'No explanation available'), correct_answer)
 
 def mc_quiz_app():
     st.title('Multiple Choice Game')
