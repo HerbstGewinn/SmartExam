@@ -1,4 +1,5 @@
 import streamlit as st
+import time  # Import the time module to use sleep
 
 # This must be the first Streamlit command
 st.set_page_config(page_title="SmartExam Creator", page_icon="📝")
@@ -246,7 +247,7 @@ def chunk_text(text, max_tokens=3000):
 
 def generate_mc_questions(content_text, api_key=st.secrets["OPENAI_API_KEY"]):
     prompt = (
-        "You are a professor in the field of Computational System Biology and should create an exam on the topic of the Input PDF."
+        "You are a professor in the field of Computational System Biology and should create an exam on the topic of the Input PDF. "
         "Using the attached lecture slides (please analyze thoroughly), create a Master-level multiple-choice exam. The exam should contain multiple-choice and single-choice questions, "
         "appropriately marked so that students know how many options to select. Create 30 realistic exam questions covering the entire content. Provide the output in JSON format. "
         "The JSON should have the structure: [{'question': '...', 'choices': ['...'], 'correct_answer': '...', 'explanation': '...'}, ...]. Ensure the JSON is valid and properly formatted."
@@ -417,25 +418,25 @@ def pdf_upload_app():
             st.session_state.content_text = content_text
             st.session_state.mc_test_generated = True
             st.success("The game has been successfully created! Switch the Sidebar Panel to solve the exam.")
+            
+            # Wait 2 seconds and switch to quiz mode
+            time.sleep(2)
+            st.session_state.app_mode = "Take the Quiz"
+            st.rerun()
+            
         else:
             st.error("Failed to parse the generated questions. Please check the OpenAI response.")
     else:
         st.warning("Please upload a PDF to generate the interactive exam.")
 
 def submit_answer(i, quiz_data):
-    user_choice = st.session_state.get(f"user_choice_{i}", None)
-    if user_choice is None:
-        st.error("Please select an answer.")
-        return
-
+    user_choice = st.session_state[f"user_choice_{i}"]
     st.session_state.answers[i] = user_choice
-
-    correct_answer = quiz_data['correct_answer']
-    if user_choice == correct_answer:
+    if user_choice == quiz_data['correct_answer']:
         st.session_state.feedback[i] = ("Correct", quiz_data.get('explanation', 'No explanation available'))
         st.session_state.correct_answers += 1
     else:
-        st.session_state.feedback[i] = ("Incorrect", quiz_data.get('explanation', 'No explanation available'), correct_answer)
+        st.session_state.feedback[i] = ("Incorrect", quiz_data.get('explanation', 'No explanation available'), quiz_data['correct_answer'])
 
 def mc_quiz_app():
     st.title('Multiple Choice Game')
