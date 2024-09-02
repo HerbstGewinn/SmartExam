@@ -2,7 +2,7 @@ import streamlit as st
 import time  # Import the time module to use sleep
 
 # This must be the first Streamlit command
-st.set_page_config(page_title="SmartExam Creator", page_icon="📝")
+st.set_page_config(page_title="SmartExam Creator", page_icon="📝", layout="centered")
 
 import argon2
 from st_supabase_connection import SupabaseConnection
