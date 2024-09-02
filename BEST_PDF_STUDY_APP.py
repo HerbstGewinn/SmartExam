@@ -2,7 +2,7 @@ import streamlit as st
 import time  # Import the time module to use sleep
 
 # This must be the first Streamlit command
-st.set_page_config(page_title="SmartExam Creator", page_icon="📝", layout="centered")
+st.set_page_config(page_title="SmartExam Creator", page_icon="📝")
 
 import argon2
 from st_supabase_connection import SupabaseConnection
@@ -344,7 +344,7 @@ def main():
         st.session_state.app_mode = st.sidebar.selectbox("Choose the app mode", app_mode_options, index=app_mode_options.index(st.session_state.app_mode))
         
         st.sidebar.markdown("## About")
-        # st.sidebar.video("https://youtu.be/zE3ToJLLSIY")  # Commented out for testing
+        st.sidebar.video("https://youtu.be/zE3ToJLLSIY")
         st.sidebar.info(
             """
             **SmartExam Creator** is an innovative tool designed to help students and educators alike. 
