@@ -4,6 +4,7 @@ import time  # Import the time module to use sleep
 # This must be the first Streamlit command
 st.set_page_config(page_title="SmartExam Creator", page_icon="📝")
 
+
 import argon2
 from st_supabase_connection import SupabaseConnection
 from stqdm import stqdm
@@ -22,14 +23,9 @@ import base64
 __version__ = "1.1.0"
 
 # Authentication Utilities
-def validate_password(password: str, min_length: int = 8, special_chars: str = "@$!%*?&_^#- ") -> bool:
-    required_chars = [
-        lambda s: any(x.isupper() for x in s),
-        lambda s: any(x.islower() for x in s),
-        lambda s: any(x.isdigit() for x in s),
-        lambda s: any(x in special_chars for x in s),
-    ]
-    return len(password) >= min_length and all(check(password) for check in required_chars)
+def validate_email(username: str) -> bool:
+    """Validates that the username contains an @ symbol, indicating it's an email."""
+    return "@" in username
 
 def login_success(message: str, username: str) -> None:
     st.success(message)
@@ -59,7 +55,7 @@ def login_form(
     user_tablename: str = "users",
     username_col: str = "username",
     password_col: str = "password",
-    constrain_password: bool = True,
+    constrain_password: bool = False,  # Password complexity disabled
     create_title: str = "Create new account :baby: ",
     login_title: str = "Login to existing account :prince: ",
     allow_guest: bool = False,  # Set to False to disable guest login
@@ -81,7 +77,7 @@ def login_form(
     login_submit_label: str = "Login",
     login_success_message: str = "Login succeeded :tada:",
     login_error_message: str = "Wrong username/password :x: ",
-    password_constraint_check_fail_message: str = "Password must contain at least 8 characters, including one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&_^#- ).",
+    email_check_fail_message: str = "Please sign up with a valid email address.",
 ) -> Client:
     """Creates a user login form in Streamlit apps.
 
@@ -143,9 +139,10 @@ def login_form(
                             type="password",
                         )
                         hashed_password = auth.generate_pwd_hash(password)
+
                         if st.form_submit_button(label=create_submit_label, type="primary"):
-                            if constrain_password and not validate_password(password):
-                                st.error(password_constraint_check_fail_message)
+                            if not validate_email(username):
+                                st.error(email_check_fail_message)
                                 st.stop()
 
                             try:
@@ -201,7 +198,6 @@ def login_form(
                             st.error(login_error_message)
 
     return client
-
 
 # Main app functions
 def stream_llm_response(messages, model_params, api_key):
