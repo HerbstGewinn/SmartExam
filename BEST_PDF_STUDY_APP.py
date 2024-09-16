@@ -243,7 +243,7 @@ def chunk_text(text, max_tokens=3000):
 
 def generate_mc_questions(content_text, api_key=st.secrets["OPENAI_API_KEY"]):
     prompt = (
-        "You are a professor in the field of Computational System Biology and should create an exam on the topic of the Input PDF. "
+        "You are a professor and professional in all university subjects that exist- and should create an exam on the topic of the Input PDF. "
         "Using the attached lecture slides (please analyze thoroughly), create a Master-level multiple-choice exam. The exam should contain multiple-choice and single-choice questions, "
         "appropriately marked so that students know how many options to select. Create 30 realistic exam questions covering the entire content. Provide the output in JSON format. "
         "The JSON should have the structure: [{'question': '...', 'choices': ['...'], 'correct_answer': '...', 'explanation': '...'}, ...]. Ensure the JSON is valid and properly formatted."
