@@ -4,7 +4,6 @@ import time  # Import the time module to use sleep
 # This must be the first Streamlit command
 st.set_page_config(page_title="SmartExam Creator", page_icon="📝")
 
-
 import argon2
 from st_supabase_connection import SupabaseConnection
 from stqdm import stqdm
@@ -199,6 +198,17 @@ def login_form(
 
     return client
 
+
+# Function to reset quiz state when a new exam is uploaded
+def reset_quiz_state():
+    """Resets the session state for a new quiz."""
+    st.session_state.answers = []
+    st.session_state.feedback = []
+    st.session_state.correct_answers = 0
+    st.session_state.mc_test_generated = False
+    st.session_state.generated_questions = []
+    st.session_state.content_text = None
+
 # Main app functions
 def stream_llm_response(messages, model_params, api_key):
     client = OpenAI(api_key=api_key)
@@ -243,7 +253,7 @@ def chunk_text(text, max_tokens=3000):
 
 def generate_mc_questions(content_text, api_key=st.secrets["OPENAI_API_KEY"]):
     prompt = (
-        "You are a professor and professional in all university subjects that exist- and should create an exam on the topic of the Input PDF. "
+        "You are a professor in the field of Computational System Biology and should create an exam on the topic of the Input PDF. "
         "Using the attached lecture slides (please analyze thoroughly), create a Master-level multiple-choice exam. The exam should contain multiple-choice and single-choice questions, "
         "appropriately marked so that students know how many options to select. Create 30 realistic exam questions covering the entire content. Provide the output in JSON format. "
         "The JSON should have the structure: [{'question': '...', 'choices': ['...'], 'correct_answer': '...', 'explanation': '...'}, ...]. Ensure the JSON is valid and properly formatted."
@@ -299,15 +309,21 @@ def generate_pdf(questions):
 
     for i, q in enumerate(questions):
         question = f"Q{i+1}: {q['question']}"
+
+        # Avoid encoding errors by replacing problematic characters with alternatives
+        question = question.replace("—", "-").encode('latin1', 'replace').decode('latin1')
         pdf.chapter_title(question)
 
         choices = "\n".join(q['choices'])
+        choices = choices.replace("—", "-").encode('latin1', 'replace').decode('latin1')
         pdf.chapter_body(choices)
 
         correct_answer = f"Correct answer: {q['correct_answer']}"
+        correct_answer = correct_answer.replace("—", "-").encode('latin1', 'replace').decode('latin1')
         pdf.chapter_body(correct_answer)
 
         explanation = f"Explanation: {q['explanation']}"
+        explanation = explanation.replace("—", "-").encode('latin1', 'replace').decode('latin1')
         pdf.chapter_body(explanation)
 
     return pdf.output(dest="S").encode("latin1")
@@ -337,7 +353,12 @@ def main():
         st.sidebar.title("SmartExam Creator")
         
         app_mode_options = ["Upload PDF & Generate Questions", "Take the Quiz", "Download as PDF"]
-        st.session_state.app_mode = st.sidebar.selectbox("Choose the app mode", app_mode_options, index=app_mode_options.index(st.session_state.app_mode))
+        st.session_state.app_mode = st.sidebar.selectbox(
+            "Choose the app mode", 
+            app_mode_options, 
+            index=app_mode_options.index(st.session_state.app_mode), 
+            key="app_mode_select"
+        )
         
         st.sidebar.markdown("## About")
         st.sidebar.video("https://youtu.be/zE3ToJLLSIY")
@@ -387,12 +408,14 @@ def pdf_upload_app():
     st.subheader("Show Us the Slides and We do the Rest")
 
     content_text = ""
-    
+
+    # Reset session state when uploading a new PDF
     if 'messages' not in st.session_state:
         st.session_state.messages = []
     
     uploaded_pdf = st.file_uploader("Upload a PDF document", type=["pdf"])
     if uploaded_pdf:
+        reset_quiz_state()  # Reset session state when a new PDF is uploaded
         pdf_text = extract_text_from_pdf(uploaded_pdf)
         content_text += pdf_text
         st.success("PDF content added to the session.")
@@ -410,13 +433,15 @@ def pdf_upload_app():
             if parsed_questions:
                 questions.extend(parsed_questions)
         if questions:
+            # Initialize session state for the new quiz
             st.session_state.generated_questions = questions
-            st.session_state.content_text = content_text
+            st.session_state.answers = [None] * len(questions)
+            st.session_state.feedback = [None] * len(questions)
+            st.session_state.correct_answers = 0
             st.session_state.mc_test_generated = True
-            st.success("The game has been successfully created! Switch the Sidebar Panel to solve the exam.")
-            
-            # Wait 2 seconds and switch to quiz mode
-            time.sleep(2)
+            st.success("The game has been successfully created! Switching to the quiz mode...")
+
+            # Automatically switch to "Take the Quiz" mode and rerun
             st.session_state.app_mode = "Take the Quiz"
             st.rerun()
             
@@ -424,6 +449,7 @@ def pdf_upload_app():
             st.error("Failed to parse the generated questions. Please check the OpenAI response.")
     else:
         st.warning("Please upload a PDF to generate the interactive exam.")
+
 
 def submit_answer(i, quiz_data):
     user_choice = st.session_state[f"user_choice_{i}"]
@@ -453,7 +479,9 @@ def mc_quiz_app():
                 user_choice = st.radio("Choose an answer:", quiz_data['choices'], key=f"user_choice_{i}")
                 st.button(f"Submit your answer {i+1}", key=f"submit_{i}", on_click=submit_answer, args=(i, quiz_data))
             else:
-                st.radio("Choose an answer:", quiz_data['choices'], key=f"user_choice_{i}", index=quiz_data['choices'].index(st.session_state.answers[i]), disabled=True)
+                selected_index = quiz_data['choices'].index(st.session_state.answers[i]) if st.session_state.answers[i] in quiz_data['choices'] else 0
+                st.radio("Choose an answer:", quiz_data['choices'], key=f"user_choice_{i}", index=selected_index, disabled=True)
+
                 if st.session_state.feedback[i][0] == "Correct":
                     st.success(st.session_state.feedback[i][0])
                 else:
