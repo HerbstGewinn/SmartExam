@@ -16,7 +16,7 @@ import json
 from PyPDF2 import PdfReader
 from PIL import Image
 from io import BytesIO
-import pandas as pd
+
 from fpdf import FPDF
 import base64
 
