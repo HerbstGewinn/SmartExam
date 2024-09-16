@@ -105,7 +105,7 @@ st-supabase-connection==2.0.0
 stack-data==0.6.3
 storage3==0.7.7
 stqdm==0.0.5
-streamlit==1.38.0
+streamlit==1.31.0
 streamlit-authenticator==0.3.3
 StrEnum==0.4.15
 stripe==10.6.0
