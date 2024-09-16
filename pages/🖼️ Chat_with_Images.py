@@ -217,15 +217,23 @@ def main():
         # Displaying the previous messages if there are any
         for message in st.session_state.messages:
             with st.chat_message(message["role"]):
-                for content in message["content"]:
-                    if content["type"] == "text":
-                        st.write(content["text"])
-                    elif content["type"] == "image_url":      
-                        st.image(content["image_url"]["url"])
-                    elif content["type"] == "video_file":
-                        st.video(content["video_file"])
-                    elif content["type"] == "audio_file":
-                        st.audio(content["audio_file"])
+                # Ensure content is a list and contains dictionaries with the expected structure
+                if isinstance(message["content"], list):
+                    for content in message["content"]:
+                        # Check if the content is a dictionary and contains the 'type' key
+                        if isinstance(content, dict) and "type" in content:
+                            if content["type"] == "text":
+                                st.write(content["text"])
+                            elif content["type"] == "image_url":      
+                                st.image(content["image_url"]["url"])
+                            elif content["type"] == "video_file":
+                                st.video(content["video_file"])
+                            elif content["type"] == "audio_file":
+                                st.audio(content["audio_file"])
+                        else:
+                            st.error("Unexpected content format encountered.")
+                else:
+                    st.error("Message content is not in the expected format.")
 
         # Model parameters (fixed)
         model_params = {
