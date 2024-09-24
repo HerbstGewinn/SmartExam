@@ -89,7 +89,7 @@ python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 pytz==2024.1
 pyvis==0.3.2
-pywin32==306
+#pywin32==306    #Pywin doesnt work
 PyYAML==6.0.2
 pyzmq==26.0.3
 realtime==1.0.6
