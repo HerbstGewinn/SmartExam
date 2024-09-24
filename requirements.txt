@@ -86,6 +86,7 @@ pytest==6.2.5
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 pytz==2024.1
+pyvis==0.3.2
 ## pywin32==306 Does not work with streamlit
 PyYAML==6.0.2
 pyzmq==26.0.3
