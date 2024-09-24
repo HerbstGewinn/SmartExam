@@ -83,13 +83,13 @@ Pygments==2.18.0
 PyJWT==2.9.0
 PyPDF2==3.0.1
 pyperclip==1.9.0
-pytesseract==0.3.10
+#pytesseract==0.3.10
 pytest==6.2.5
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 pytz==2024.1
 pyvis==0.3.2
-#pywin32==306    #Pywin doesnt work
+#pywin32==306
 PyYAML==6.0.2
 pyzmq==26.0.3
 realtime==1.0.6
