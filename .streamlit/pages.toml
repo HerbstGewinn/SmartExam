@@ -4,7 +4,7 @@ name = "Home"
 icon = "🏠"
 
 [[pages]]
-path = "pages/page2.py"
+path = "pages/📄 Chat_with_PDF.py"
 name = "Page 2"
 icon = ":books:"
 url_path = "my_books" # You can override the default url path for a page
