@@ -5,3 +5,6 @@ backgroundColor = "#0e1117"
 secondaryBackgroundColor = "#262730"
 textColor = "#ffffff"
 font = "sans serif"
+
+pageTitle = "My Study App"  # Set your desired app name here
+favicon = "📝"  # Optional: You can also set a custom emoji or favicon
