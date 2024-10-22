@@ -14,7 +14,7 @@ from supabase import Client
 st.set_page_config(
     page_title="Master Your Studies - Create Your Exam",
     page_icon="🧠",  
-    layout="centered",
+    layout="wide",
     initial_sidebar_state="expanded",
 )
 
