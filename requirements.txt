@@ -129,3 +129,4 @@ watchdog==4.0.1
 websockets==12.0
 wcwidth==0.2.13
 zipp==3.20.0
+st-pages==0.4.3
