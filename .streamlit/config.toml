@@ -6,15 +6,11 @@ secondaryBackgroundColor = "#262730"
 textColor = "#ffffff"
 font = "sans serif"
 
-[[pages]]
+[pages]
 path = "BEST_PDF_STUDY_APP.py"
 name = "Home"
 icon = "🏠"
 
-[[pages]]
-path = "pages/📄 Chat_with_PDF.py"
-name = "Page 2"
-icon = ":books:"
 
 
 
