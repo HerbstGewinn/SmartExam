@@ -22,7 +22,9 @@ import base64
 
 __version__ = "1.1.0"
 
-
+from st_pages import show_pages_from_config
+# Automatically load pages from .streamlit/pages.toml
+show_pages_from_config()
 
 hide_streamlit_style = """
                 <style>
