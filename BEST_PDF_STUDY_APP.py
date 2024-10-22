@@ -20,27 +20,13 @@ from fpdf import FPDF
 import base64
 
 __version__ = "1.1.0"
-hide_default_format = """
-       <style>
-       #MainMenu {visibility: hidden;}
-       footer {visibility: hidden;}
-       .viewerBadge_container__1QSob {display: none;}  /* Hides the "Made with Streamlit" badge */
-
-       /* Custom footer settings */
-       footer {
-           visibility: hidden;
-       }
-       footer:after {
-           content: 'goodbye';
-           visibility: visible;
-           display: block;
-           position: relative;
-           padding: 5px;
-           top: 2px;
-       }
-       </style>
-       """
-st.markdown(hide_default_format, unsafe_allow_html=True)
+hide_streamlit_style = """
+            <style>
+            [data-testid="stToolbar"] {visibility: hidden !important;}
+            footer {visibility: hidden !important;}
+            </style>
+            """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 
 # Authentication Utilities
