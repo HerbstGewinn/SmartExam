@@ -9,6 +9,7 @@ import re  # We will use this to clean up the response
 import argon2
 from st_supabase_connection import SupabaseConnection
 from supabase import Client
+st.set_page_config(layout="wide")
 
 # OpenAI GPT-4 Integration (Insert your OpenAI API Key via Streamlit Secrets)
 openai.api_key = st.secrets["OPENAI_API_KEY"]
