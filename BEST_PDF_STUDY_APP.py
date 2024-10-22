@@ -28,6 +28,21 @@ hide_default_format = """
        .viewerBadge_container__1QSob {display: none;}  /* Hides the "Made with Streamlit" badge */
        </style>
        """
+footer {
+	
+	visibility: hidden;
+	
+	}
+footer:after {
+	content:'goodbye'; 
+	visibility: visible;
+	display: block;
+	position: relative;
+	#background-color: red;
+	padding: 5px;
+	top: 2px;
+}
+
 st.markdown(hide_default_format, unsafe_allow_html=True)
 
 # Authentication Utilities
