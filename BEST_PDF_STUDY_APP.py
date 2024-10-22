@@ -22,14 +22,7 @@ import base64
 
 __version__ = "1.1.0"
 
-from st_pages import Page, show_pages, add_page_title
 
-show_pages(
-    [
-        Page("BEST_PDF_STUDY_APP.py", "Home", "🏠"),
-        Page("pages/📄 Chat_with_PDF.py", "Page 2", ":books:"),
-    ]
-)
 
 hide_streamlit_style = """
                 <style>
