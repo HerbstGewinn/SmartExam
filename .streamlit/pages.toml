@@ -1,0 +1,10 @@
+[[pages]]
+path = "BEST_PDF_STUDY_APP.py"
+name = "Home"
+icon = "🏠"
+
+[[pages]]
+path = "pages/page2.py"
+name = "Page 2"
+icon = ":books:"
+url_path = "my_books" # You can override the default url path for a page
