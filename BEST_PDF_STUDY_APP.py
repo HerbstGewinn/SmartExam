@@ -23,8 +23,9 @@ __version__ = "1.1.0"
 
 hide_default_format = """
        <style>
-       #MainMenu {visibility: hidden; }
+       #MainMenu {visibility: hidden;}
        footer {visibility: hidden;}
+       .viewerBadge_container__1QSob {display: none;}  /* Hides the "Made with Streamlit" badge */
        </style>
        """
 st.markdown(hide_default_format, unsafe_allow_html=True)
