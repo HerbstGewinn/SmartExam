@@ -20,30 +20,28 @@ from fpdf import FPDF
 import base64
 
 __version__ = "1.1.0"
-
 hide_default_format = """
        <style>
        #MainMenu {visibility: hidden;}
        footer {visibility: hidden;}
        .viewerBadge_container__1QSob {display: none;}  /* Hides the "Made with Streamlit" badge */
+
+       /* Custom footer settings */
+       footer {
+           visibility: hidden;
+       }
+       footer:after {
+           content: 'goodbye';
+           visibility: visible;
+           display: block;
+           position: relative;
+           padding: 5px;
+           top: 2px;
+       }
        </style>
        """
 st.markdown(hide_default_format, unsafe_allow_html=True)
 
-footer {
-	
-	visibility: hidden;
-	
-	}
-footer:after {
-	content:'goodbye'; 
-	visibility: visible;
-	display: block;
-	position: relative;
-	#background-color: red;
-	padding: 5px;
-	top: 2px;
-}
 
 # Authentication Utilities
 def validate_email(username: str) -> bool:
