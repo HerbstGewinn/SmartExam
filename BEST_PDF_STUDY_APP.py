@@ -28,6 +28,8 @@ hide_default_format = """
        .viewerBadge_container__1QSob {display: none;}  /* Hides the "Made with Streamlit" badge */
        </style>
        """
+st.markdown(hide_default_format, unsafe_allow_html=True)
+
 footer {
 	
 	visibility: hidden;
@@ -42,8 +44,6 @@ footer:after {
 	padding: 5px;
 	top: 2px;
 }
-
-st.markdown(hide_default_format, unsafe_allow_html=True)
 
 # Authentication Utilities
 def validate_email(username: str) -> bool:
