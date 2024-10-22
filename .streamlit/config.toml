@@ -6,4 +6,8 @@ secondaryBackgroundColor = "#262730"
 textColor = "#ffffff"
 font = "sans serif"
 
+[browser]
+pageTitle = "SmartExam Creator"  # Set the global page title here
+favicon = "📝"  # Set a global favicon here
+
 
