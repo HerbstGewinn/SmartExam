@@ -1,4 +1,5 @@
 [theme]
+base = "dark"  #dark theme as a default for every device and every user
 primaryColor = "#1a73e8"
 backgroundColor = "#0e1117"
 secondaryBackgroundColor = "#262730"
