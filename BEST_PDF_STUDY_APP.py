@@ -21,6 +21,14 @@ import base64
 
 __version__ = "1.1.0"
 
+hide_default_format = """
+       <style>
+       #MainMenu {visibility: hidden; }
+       footer {visibility: hidden;}
+       </style>
+       """
+st.markdown(hide_default_format, unsafe_allow_html=True)
+
 # Authentication Utilities
 def validate_email(username: str) -> bool:
     """Validates that the username contains an @ symbol, indicating it's an email."""
