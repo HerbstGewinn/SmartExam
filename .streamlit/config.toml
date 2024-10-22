@@ -6,7 +6,7 @@ secondaryBackgroundColor = "#262730"
 textColor = "#ffffff"
 font = "sans serif"
 
-[pages]
+[[pages]]
 path = "BEST_PDF_STUDY_APP.py"
 name = "Home"
 icon = "🏠"
