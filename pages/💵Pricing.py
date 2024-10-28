@@ -341,7 +341,7 @@ with col3:
         pro_plan_html, unsafe_allow_html=True)
     if st.button("BUY 2 YEAR PASS", key="pro-btn", use_container_width=True):
         handle_checkout(PRO_PLAN_ID)
-        st.link_button("Go to gallery", url={checkout_url})        #Just try it !!
+        #st.link_button("Go to gallery", url={checkout_url})        #Just try it !!
         st.success("You have selected the One-time payment Lifetime Deal!")
         st.balloons()
 
