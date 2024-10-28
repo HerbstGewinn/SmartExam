@@ -56,9 +56,9 @@ def handle_checkout(plan_id):
             st.markdown(f'[Click here to proceed to payment]({checkout_url})')
 
             # Optionally: Automatically redirect to Stripe checkout after some time
-            st.markdown(f"""
-            <meta http-equiv="refresh" content="1; url={checkout_url}">
-            """, unsafe_allow_html=True)
+            #st.markdown(f"""
+            #<meta http-equiv="refresh" content="1; url={checkout_url}">
+            #""", unsafe_allow_html=True)
 
         else:
             st.error("Error creating checkout session")
