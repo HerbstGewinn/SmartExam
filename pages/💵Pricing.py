@@ -51,17 +51,21 @@ def handle_checkout(plan_id):
         if response.status_code == 200:
             checkout_url = response.json()["url"]  # Retrieve the Stripe checkout URL
 
-            # Display a message while redirecting
-            st.write("Redirecting to Stripe checkout...")
-            time.sleep(2)  # Optional delay for user experience
-            
-            # Use query parameters for redirection (replace query params if needed)
-            st.experimental_set_query_params(url=checkout_url)
+            # Inject JavaScript to redirect to the Stripe checkout page
+            st.markdown(
+                f"""
+                <script type="text/javascript">
+                    window.location.href = "{checkout_url}";
+                </script>
+                """,
+                unsafe_allow_html=True
+            )
         else:
             st.error("Error creating checkout session")
 
     except Exception as e:
         st.error(f"Error creating checkout session: {e}")
+
 
 
 # Pricing Section using Bootstrap with Buttons Embedded Directly
