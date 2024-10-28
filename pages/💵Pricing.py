@@ -51,12 +51,18 @@ def handle_checkout(plan_id):
         if response.status_code == 200:
             checkout_url = response.json()["url"]  # Retrieve the Stripe checkout URL
 
-            # Display a message while redirecting
+            # Display a message while redirecting and inject JavaScript for redirection
             st.write("Redirecting to Stripe checkout...")
-            time.sleep(2)  # Optional delay for user experience
-            
-            # Use query parameters for redirection (replace query params if needed)
-            st.query_params(url=checkout_url)
+            st.markdown(
+                f"""
+                <script type="text/javascript">
+                    setTimeout(function() {{
+                        window.location.href = "{checkout_url}";
+                    }}, 1000);
+                </script>
+                """,
+                unsafe_allow_html=True
+            )
         else:
             st.error("Error creating checkout session")
 
