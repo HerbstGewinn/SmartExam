@@ -1,8 +1,10 @@
 import streamlit as st
 import requests
+import time
 from streamlit_supabase_auth import login_form, logout_button
 import streamlit.components.v1 as components
 
+# Set the page layout to wide
 st.set_page_config(layout="wide")
 
 # Load API keys securely from secrets
@@ -45,21 +47,16 @@ def handle_checkout(plan_id):
             headers=headers,
         )
 
-        # If the webhook call was successful, retrieve the session ID
+        # If the webhook call was successful, retrieve the session URL
         if response.status_code == 200:
-            session_id = response.json()["url"]     #Here it is basically now the session url and not id, but naming stays
+            checkout_url = response.json()["url"]  # Retrieve the Stripe checkout URL
 
-            # Create the redirect URL to Stripe checkout
-            checkout_url = f"{session_id}"
-
-            # Display the clickable link for manual redirection
-            st.markdown(f'[Click here to proceed to payment]({checkout_url})')
-
-            # Optionally: Automatically redirect to Stripe checkout after some time
-            st.markdown(f"""
-            <meta http-equiv="refresh" content="1; url={checkout_url}">
-            """, unsafe_allow_html=True)
-
+            # Display a message while redirecting
+            st.write("Redirecting to Stripe checkout...")
+            time.sleep(2)  # Optional delay for user experience
+            
+            # Use query parameters for redirection (replace query params if needed)
+            st.experimental_set_query_params(url=checkout_url)
         else:
             st.error("Error creating checkout session")
 
