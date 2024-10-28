@@ -2,7 +2,6 @@ import streamlit as st
 import requests
 import time
 from streamlit_supabase_auth import login_form, logout_button
-import streamlit.components.v1 as components
 
 # Set the page layout to wide
 st.set_page_config(layout="wide")
@@ -31,9 +30,9 @@ with st.sidebar:
 
 # Define your plan IDs (Price IDs from Stripe)
 PREMIUM_PLAN_ID = "price_1Q9QZ6RwYqmuXQJ5wOqzdHwq"  # replace with your actual Premium Price ID
-PRO_PLAN_ID = "price_1QEWiVRwYqmuXQJ5VD1E53cQ"  # replace with your actual Pro Price ID; CHANGES TO 2-YEAR PLAN DEFAULT
+PRO_PLAN_ID = "price_1QEWiVRwYqmuXQJ5VD1E53cQ"  # replace with your actual Pro Price ID
 
-# Handle Subscription Checkout
+# Handle Subscription Checkout with direct JavaScript redirection
 def handle_checkout(plan_id):
     try:
         # Send request to webhook to create the checkout session
@@ -50,18 +49,20 @@ def handle_checkout(plan_id):
         # If the webhook call was successful, retrieve the session URL
         if response.status_code == 200:
             checkout_url = response.json()["url"]  # Retrieve the Stripe checkout URL
-
+            
             # Display a message while redirecting and inject JavaScript for redirection
             st.write("Redirecting to Stripe checkout...")
-            st.markdown(
+            time.sleep(1)  # Optional delay for user experience
+            
+            # Inject HTML and JavaScript to redirect the user to the checkout URL
+            st.components.v1.html(
                 f"""
                 <script type="text/javascript">
-                    setTimeout(function() {{
-                        window.location.href = "{checkout_url}";
-                    }}, 1000);
+                    window.location.href = "{checkout_url}";
                 </script>
                 """,
-                unsafe_allow_html=True
+                height=0,
+                scrolling=False
             )
         else:
             st.error("Error creating checkout session")
