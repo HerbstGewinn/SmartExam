@@ -130,3 +130,5 @@ websockets==12.0
 wcwidth==0.2.13
 zipp==3.20.0
 st-pages==0.4.3
+streamlit-supabase-auth==1.0.2 #Added for the new authentication
+
