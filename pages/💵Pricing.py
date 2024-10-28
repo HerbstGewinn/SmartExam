@@ -55,7 +55,7 @@ def handle_checkout(plan_id):
             # Display the clickable link for manual redirection
             #st.markdown(f'[Click here to proceed to payment]({checkout_url})')
 
-            st.markdown(f'<a href="{checkout_url}" target="_self"></a>', unsafe_allow_html=True)
+            st.markdown(f'<a href="{checkout_url}" target="_blank"></a>', unsafe_allow_html=True)
             
             # Optionally: Automatically redirect to Stripe checkout after some time
             #st.markdown(f"""
