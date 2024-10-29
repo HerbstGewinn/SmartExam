@@ -11,6 +11,7 @@ from st_supabase_connection import SupabaseConnection
 from supabase import Client
 from streamlit_supabase_auth import login_form, logout_button
 from supabase import create_client, Client
+
 st.set_page_config(layout="wide")
 
 hide_streamlit_style = """
@@ -168,7 +169,7 @@ def generate_graph_from_xml(xml_response):
 # Main app function
 def main():
 # Load environment variables
-    dotenv.load_dotenv()
+    
 
     # Load API keys securely from secrets
     SUPABASE_URL = st.secrets["SUPABASE_URL"]
