@@ -4,8 +4,6 @@ from streamlit_supabase_auth import login_form, logout_button
 import streamlit.components.v1 as components
 
 st.set_page_config(layout="wide")
-# Load environment variables
-
 
 # Load API keys securely from secrets
 supabase_api_key = st.secrets["SUPABASE_KEY"]
