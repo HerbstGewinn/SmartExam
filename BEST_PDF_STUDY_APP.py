@@ -21,6 +21,7 @@ import base64
 import PyPDF2
 from streamlit_supabase_auth import login_form, logout_button
 from supabase import create_client, Client
+from st_pages import show_pages_from_config
 
 
 __version__ = "1.1.0"
@@ -28,6 +29,41 @@ __version__ = "1.1.0"
 #from st_pages import show_pages_from_config --> EDIT THIS ONE !!
 # Automatically load pages from .streamlit/pages.toml
 #show_pages_from_config()
+
+show_pages_from_config()
+
+hide_streamlit_style = """
+<style>
+div[data-testid="stToolbar"] {
+visibility: hidden;
+height: 0%;
+position: fixed;
+}
+div[data-testid="stDecoration"] {
+visibility: hidden;
+height: 0%;
+position: fixed;
+}
+div[data-testid="stStatusWidget"] {
+visibility: hidden;
+height: 0%;
+position: fixed;
+}
+#MainMenu {
+visibility: hidden;
+height: 0%;
+}
+header {
+visibility: hidden;
+height: 0%;
+}
+footer {
+visibility: hidden;
+height: 0%;
+}
+</style>
+"""
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
 # Load environment variables
 dotenv.load_dotenv()
