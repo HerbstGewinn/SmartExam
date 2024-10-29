@@ -255,10 +255,12 @@ def main():
     # If the user is not logged in, stop the app
     if not session:
        st.info(
-           "Thank you to everyone for the ongoing support. We have changed our login functionality, so everyone with a previous account can simply select **Don't have an account ? Sign up** for once and confirm their old credentials "
-           "- or create a new account with a preferred login method."
+        "Thank you to everyone for the ongoing support. We have changed our login functionality, so everyone with a previous account can simply select **Don't have an account? Sign up** for once and confirm their old credentials "
+        "- or create a new account with a preferred login method."
            )
-        st.stop()
+       st.stop()
+           
+
 
     # Sidebar with logout button and user welcome message
     with st.sidebar:
