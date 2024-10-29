@@ -7,49 +7,12 @@ st.set_page_config(layout="wide")
 # Load environment variables
 
 
-hide_streamlit_style = """
-<style>
-div[data-testid="stToolbar"] {
-visibility: hidden;
-height: 0%;
-position: fixed;
-}
-div[data-testid="stDecoration"] {
-visibility: hidden;
-height: 0%;
-position: fixed;
-}
-div[data-testid="stStatusWidget"] {
-visibility: hidden;
-height: 0%;
-position: fixed;
-}
-#MainMenu {
-visibility: hidden;
-height: 0%;
-}
-header {
-visibility: hidden;
-height: 0%;
-}
-footer {
-visibility: hidden;
-height: 0%;
-}
-</style>
-"""
-st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-
 # Load API keys securely from secrets
 supabase_api_key = st.secrets["SUPABASE_KEY"]
 supabase_url = st.secrets["SUPABASE_URL"]
 webhook_url = st.secrets["SUPABASE_FUNCTION_URL"]  # replace with actual webhook URL
 stripe_public_key = st.secrets["stripe_api_key"]
 
-#st.info(
-#"Thank you to everyone for the ongoing support. We have changed our login functionality, so everyone with a previous account can simply select **Don't have an account ? Sign up** for once and confirm their old credentials "
-#"- or create a new account with a preferred login method."
-#)
 # Initialize the login form with Supabase
 session = login_form(
     url=supabase_url,
