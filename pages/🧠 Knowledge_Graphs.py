@@ -7,103 +7,13 @@ import openai
 import xml.etree.ElementTree as ET
 import re  # We will use this to clean up the response
 import argon2
+import dotenv
 from st_supabase_connection import SupabaseConnection
 from supabase import Client
-st.set_page_config(layout="wide")
+from streamlit_supabase_auth import login_form, logout_button
+from supabase import create_client, Client
 
 # OpenAI GPT-4 Integration (Insert your OpenAI API Key via Streamlit Secrets)
-openai.api_key = st.secrets["OPENAI_API_KEY"]
-
-# Supabase login form
-def login_form(
-    * ,
-    title: str = "Authentication",
-    user_tablename: str = "users",
-    username_col: str = "username",
-    password_col: str = "password",
-    create_title: str = "Create new account :baby: ",
-    login_title: str = "Login to existing account :prince: ",
-    allow_guest: bool = False,  
-    allow_create: bool = True,
-    create_username_label: str = "Create an email username",
-    create_username_placeholder: str = None,
-    create_username_help: str = None,
-    create_password_label: str = "Create a password",
-    create_password_placeholder: str = None,
-    create_password_help: str = "Password cannot be recovered if lost",
-    create_submit_label: str = "Create account",
-    create_success_message: str = "Account created and logged-in :tada:",
-    login_username_label: str = "Enter your email username",
-    login_username_placeholder: str = None,
-    login_username_help: str = None,
-    login_password_label: str = "Enter your password",
-    login_password_placeholder: str = None,
-    login_password_help: str = None,
-    login_submit_label: str = "Login",
-    login_success_message: str = "Login succeeded :tada:",
-    login_error_message: str = "Wrong username/password :x: ",
-    email_constraint_fail_message: str = "Please sign up with a valid email address (must contain @).",
-) -> Client:
-    """Creates a user login form in Streamlit apps with simpler password criteria and email validation."""
-
-    client = st.connection(name="supabase", type=SupabaseConnection)
-    auth = argon2.PasswordHasher()
-
-    if "authenticated" not in st.session_state:
-        st.session_state["authenticated"] = False
-
-    if "username" not in st.session_state:
-        st.session_state["username"] = None
-
-    if not st.session_state["authenticated"]:
-        with st.expander(title, expanded=True):
-            if allow_create:
-                create_tab, login_tab = st.tabs([create_title, login_title])
-            else:
-                login_tab = st.container()
-
-            if allow_create:
-                with create_tab:
-                    with st.form(key="create"):
-                        username = st.text_input(label=create_username_label, placeholder=create_username_placeholder, help=create_username_help)
-                        password = st.text_input(label=create_password_label, placeholder=create_password_placeholder, help=create_password_help, type="password")
-                        hashed_password = auth.hash(password)
-                        if st.form_submit_button(label=create_submit_label, type="primary"):
-                            if "@" not in username:
-                                st.error(email_constraint_fail_message)
-                                st.stop()
-
-                            try:
-                                client.table(user_tablename).insert({username_col: username, password_col: hashed_password}).execute()
-                            except Exception as e:
-                                st.error(e.message)
-                            else:
-                                st.session_state["authenticated"] = True
-                                st.session_state["username"] = username
-                                st.success(create_success_message)
-                                st.rerun()
-
-            with login_tab:
-                with st.form(key="login"):
-                    username = st.text_input(label=login_username_label, placeholder=login_username_placeholder, help=login_username_help)
-                    password = st.text_input(label=login_password_label, placeholder=login_password_placeholder, help=login_password_help, type="password")
-
-                    if st.form_submit_button(label=login_submit_label, type="primary"):
-                        response = client.table(user_tablename).select(f"{username_col}, {password_col}").eq(username_col, username).execute()
-
-                        if len(response.data) > 0:
-                            db_password = response.data[0]["password"]
-                            if auth.verify(db_password, password):
-                                st.session_state["authenticated"] = True
-                                st.session_state["username"] = username
-                                st.success(login_success_message)
-                                st.rerun()
-                            else:
-                                st.error(login_error_message)
-                        else:
-                            st.error(login_error_message)
-
-    return client
 
 # Function to extract text from PDF
 def extract_text_from_pdf(pdf_file):
@@ -208,61 +118,125 @@ def generate_graph_from_xml(xml_response):
     except ET.ParseError as e:
         st.error(f"Failed to parse XML: {e}")
         return None
+    
 
 # Main app function
 def main():
-    # Authentication check
-    client = login_form()
+# Load environment variables
+    dotenv.load_dotenv()
 
-    if st.session_state["authenticated"]:
-        st.title("🧠 Upload Lectures- Generate your Knowledge Graph")
-        st.write("Upload a PDF, get a summary, and generate a knowledge graph.")
+    # Load API keys securely from secrets
+    SUPABASE_URL = st.secrets["SUPABASE_URL"]
+    SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
+    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-        # File uploader to upload a PDF
-        uploaded_pdf = st.file_uploader("Choose a PDF file", type="pdf")
-
-        # Check if a PDF file is uploaded
-        if uploaded_pdf is not None:
-            # Step 1: Extract text from the uploaded PDF
-            pdf_text = extract_text_from_pdf(uploaded_pdf)
-            
-            # Step 2: Summarize the text using GPT-4
-            st.subheader("Summarizing PDF content...")
-            
-            # Call the summarize function (synchronous)
-            summary = summarize_text(openai.api_key, pdf_text)
-            
-            # Display the summary
-            
-            st.write(summary)
-
-            # Step 3: Extract entities and relationships using GPT-4
-            st.subheader("Generating Knowledge Graph...")
-            
-            # Call the entity and relation extraction function (synchronous)
-            xml_response = get_entities_and_relations(openai.api_key, pdf_text)
-            
-            # Step 4: Generate a knowledge graph from the GPT-4 response
-            graph = generate_graph_from_xml(xml_response)
-            
-            if graph:
-                # Step 5: Visualize the graph using PyVis
-                net = Network(height='750px', width='100%', bgcolor='#222222', font_color='white')
-                net.from_nx(graph)  # Convert the NetworkX graph into a PyVis graph
-                
-                # Save and display the graph
-                net.save_graph('knowledge_graph.html')
-                HtmlFile = open('knowledge_graph.html', 'r', encoding='utf-8')
-                components.html(HtmlFile.read(), height=800)
-                
-                # Step 6: Provide a download button for the graph
-                with open('knowledge_graph.html', 'rb') as file:
-                    st.download_button(label="Download Knowledge Graph", data=file, file_name="knowledge_graph.html", mime="text/html")
-            else:
-                st.error("Failed to generate the knowledge graph.")
-
+    # Function to fetch the subscription tier from Supabase
+    def fetch_subscription_tier(user_id):
+        response = supabase.table("user_data").select("subscription_tier", "graph_upload_count").eq("id", user_id).execute()
+        if response.data and len(response.data) > 0:
+            return response.data[0]["subscription_tier"], response.data[0]["graph_upload_count"]
         else:
-            st.warning("Please upload a PDF file to generate a knowledge graph.")
+            return None, None
+
+    # Function to increment pdf_upload_count in the database
+    def increment_graph_upload_count(user_id):
+        response = supabase.rpc("increment_graph_upload_count", {"user_uuid": user_id}).execute()
+        st.write(f"Graph Upload Count Increment Response: {response}")  # Debugging response
+
+# Main app function
+    #st.info(
+    #"Thank you to everyone for the ongoing support. We have changed our login functionality, so everyone with a previous account can simply select **Don't have an account ? Sign up** for once and confirm their old credentials "
+    #"- or create a new account with a preferred login method."
+    #)
+    # Initialize the login form with Supabase Auth
+    session = login_form(
+        url=SUPABASE_URL,
+        apiKey=SUPABASE_KEY,
+        providers=["email","apple", "facebook", "github", "google"],
+    )
+
+    # If the user is not logged in, stop the app
+    if not session:
+        st.stop()
+
+    # Sidebar with logout button and user welcome message
+    with st.sidebar:
+        st.write(f"Welcome {session['user']['email']}")
+        logout_button()
+
+    # Fetch and display the user's subscription tier and PDF upload count
+    user_id = session['user']['id']  # Get the user ID from the session
+    subscription_tier, graph_upload_count = fetch_subscription_tier(user_id)
+
+    st.sidebar.write(f"Subscription Tier: **{subscription_tier}**")
+    st.sidebar.write(f"Summaries & Knowledge Graphs created: **{graph_upload_count}**")
+
+    # --- Check if the user has reached the usage limit ---
+    # Check if the pdf_upload_count is greater than or equal to 10 (adjusted condition)
+    if subscription_tier == "FREE":
+        if graph_upload_count and graph_upload_count >= 10:
+            st.error("Your usage limit for this month has finished. Upgrade to a higher version for an advanced study progress.")
+    
+            # Display the "Upgrade Now" button only when the limit is exceeded
+            if st.button("Upgrade Now"):
+                # Meta-refresh-based redirect
+                redirect_url = "https://smartexam.streamlit.app/Pricing"
+                st.markdown(f"""
+                    <meta http-equiv="refresh" content="0; url={redirect_url}">
+                """, unsafe_allow_html=True)
+
+        return  # Stop further interaction if the limit is reached
+    
+    st.title("🧠 Upload Lectures- Generate your Knowledge Graph")
+    st.write("Upload a PDF, get a summary, and generate a knowledge graph.")
+
+    # File uploader to upload a PDF
+    uploaded_pdf = st.file_uploader("Choose a PDF file", type="pdf")
+
+    # Check if a PDF file is uploaded
+    if uploaded_pdf is not None:
+        # Step 1: Extract text from the uploaded PDF
+        pdf_text = extract_text_from_pdf(uploaded_pdf)
+        increment_graph_upload_count(user_id)
+        
+        
+        # Step 2: Summarize the text using GPT-4
+        st.subheader("Summarizing PDF content...")
+        
+        # Call the summarize function (synchronous)
+        summary = summarize_text(openai.api_key, pdf_text)
+        
+        # Display the summary
+        
+        st.write(summary)
+
+        # Step 3: Extract entities and relationships using GPT-4
+        st.subheader("Generating Knowledge Graph...")
+        
+        # Call the entity and relation extraction function (synchronous)
+        xml_response = get_entities_and_relations(openai.api_key, pdf_text)
+        
+        # Step 4: Generate a knowledge graph from the GPT-4 response
+        graph = generate_graph_from_xml(xml_response)
+        
+        if graph:
+            # Step 5: Visualize the graph using PyVis
+            net = Network(height='750px', width='100%', bgcolor='#222222', font_color='white')
+            net.from_nx(graph)  # Convert the NetworkX graph into a PyVis graph
+            
+            # Save and display the graph
+            net.save_graph('knowledge_graph.html')
+            HtmlFile = open('knowledge_graph.html', 'r', encoding='utf-8')
+            components.html(HtmlFile.read(), height=800)
+            
+            # Step 6: Provide a download button for the graph
+            with open('knowledge_graph.html', 'rb') as file:
+                st.download_button(label="Download Knowledge Graph", data=file, file_name="knowledge_graph.html", mime="text/html")
+        else:
+            st.error("Failed to generate the knowledge graph.")
+
+    else:
+        st.warning("Please upload a PDF file to generate a knowledge graph.")
 
 if __name__ == "__main__":
     main()
