@@ -3,7 +3,49 @@ import requests
 from streamlit_supabase_auth import login_form, logout_button
 import streamlit.components.v1 as components
 
+hide_streamlit_style = """
+<style>
+div[data-testid="stToolbar"] {
+visibility: hidden;
+height: 0%;
+position: fixed;
+}
+div[data-testid="stDecoration"] {
+visibility: hidden;
+height: 0%;
+position: fixed;
+}
+div[data-testid="stStatusWidget"] {
+visibility: hidden;
+height: 0%;
+position: fixed;
+}
+#MainMenu {
+visibility: hidden;
+height: 0%;
+}
+header {
+visibility: hidden;
+height: 0%;
+}
+footer {
+visibility: hidden;
+height: 0%;
+}
+</style>
+"""
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
+# Load environment variables
+dotenv.load_dotenv()
+
+hide_default_format = """
+       <style>
+       #MainMenu {visibility: hidden; }
+       footer {visibility: hidden;}
+       </style>
+       """
+st.markdown(hide_default_format, unsafe_allow_html=True)
 
 st.set_page_config(layout="wide")
 
