@@ -19,7 +19,7 @@ name = "Summarize & Knowledge Graphs"
 icon = "🧠"
 
 [[pages]]
-path = "pages/💵Pricing.py"
+path = "pages/💵 Pricing.py"
 name = "Pricing"
 icon = "💵"
 
