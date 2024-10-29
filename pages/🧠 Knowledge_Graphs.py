@@ -6,12 +6,12 @@ import PyPDF2
 import openai
 import xml.etree.ElementTree as ET
 import re  # We will use this to clean up the response
-import argon2
 import dotenv
 from st_supabase_connection import SupabaseConnection
 from supabase import Client
 from streamlit_supabase_auth import login_form, logout_button
 from supabase import create_client, Client
+st.set_page_config(layout="wide")
 
 # OpenAI GPT-4 Integration (Insert your OpenAI API Key via Streamlit Secrets)
 openai.api_key = st.secrets["OPENAI_API_KEY"]
