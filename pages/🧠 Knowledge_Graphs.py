@@ -14,6 +14,7 @@ from streamlit_supabase_auth import login_form, logout_button
 from supabase import create_client, Client
 
 # OpenAI GPT-4 Integration (Insert your OpenAI API Key via Streamlit Secrets)
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 # Function to extract text from PDF
 def extract_text_from_pdf(pdf_file):
