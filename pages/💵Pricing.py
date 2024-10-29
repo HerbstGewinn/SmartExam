@@ -13,10 +13,10 @@ supabase_url = st.secrets["SUPABASE_URL"]
 webhook_url = st.secrets["SUPABASE_FUNCTION_URL"]  # replace with actual webhook URL
 stripe_public_key = st.secrets["stripe_api_key"]
 
-st.info(
-"Thank you to everyone for the ongoing support. We have changed our login functionality, so everyone with a previous account can simply select **Don't have an account ? Sign up** for once and confirm their old credentials "
-"- or create a new account with a preferred login method."
-)
+#st.info(
+#"Thank you to everyone for the ongoing support. We have changed our login functionality, so everyone with a previous account can simply select **Don't have an account ? Sign up** for once and confirm their old credentials "
+#"- or create a new account with a preferred login method."
+#)
 # Initialize the login form with Supabase
 session = login_form(
     url=supabase_url,
