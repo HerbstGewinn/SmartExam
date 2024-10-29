@@ -3,12 +3,9 @@ import requests
 from streamlit_supabase_auth import login_form, logout_button
 import streamlit.components.v1 as components
 
-
-
+st.set_page_config(layout="wide")
 # Load environment variables
 dotenv.load_dotenv()
-
-st.set_page_config(layout="wide")
 
 hide_streamlit_style = """
 <style>
