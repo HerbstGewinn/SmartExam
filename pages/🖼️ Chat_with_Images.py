@@ -91,7 +91,7 @@ def main():
     session = login_form(
         url=SUPABASE_URL,
         apiKey=SUPABASE_KEY,
-        providers=["email","apple", "facebook", "github", "google"],
+        providers=["email", "github", "google"],
     )
 
     # If the user is not logged in, stop the app
