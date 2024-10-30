@@ -60,6 +60,10 @@ st.markdown(hide_default_format, unsafe_allow_html=True)
 
 # OpenAI GPT-4 Integration (Insert your OpenAI API Key via Streamlit Secrets)
 openai.api_key = st.secrets["OPENAI_API_KEY"]
+# Load API keys securely from secrets
+SUPABASE_URL = st.secrets["SUPABASE_URL"]
+SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # Function to extract text from PDF
 def extract_text_from_pdf(pdf_file):
@@ -169,12 +173,6 @@ def generate_graph_from_xml(xml_response):
 # Main app function
 def main():
 # Load environment variables
-    
-
-    # Load API keys securely from secrets
-    SUPABASE_URL = st.secrets["SUPABASE_URL"]
-    SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
-    supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
     # Function to fetch the subscription tier from Supabase
     def fetch_subscription_tier(user_id):
