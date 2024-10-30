@@ -353,7 +353,7 @@ free_plan_html = """
     <h2 class="price-title">Free Plan</h2>
     <p class="price">$0.00 / month</p>
     <ul class="features">
-        <li>5 Multiple Choice Exams</li>
+        <li>10 Multiple Choice Exams</li>
         <li>10 Chats with PDF</li>
         <li>10 Chats with handwritten notes/pictures</li>
         <li>10 Summaries & Knowledge Graph Creation</li>
