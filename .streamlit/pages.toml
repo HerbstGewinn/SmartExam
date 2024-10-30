@@ -14,11 +14,6 @@ name = "Chat with Images"
 icon = "🖼️"
 
 [[pages]]
-path = "pages/Knowledge_Graphs.py"
-name = "Summarize & Knowledge Graphs"
-icon = "🧠"
-
-[[pages]]
 path = "pages/💵 Pricing.py"
 name = "Pricing"
 icon = "💵"
