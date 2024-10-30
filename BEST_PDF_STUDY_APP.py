@@ -277,7 +277,7 @@ def main():
     # Only enforce usage limit if the subscription tier is "FREE"
     if subscription_tier == "FREE":
         # Check if the mc_upload_count is greater than or equal to 5
-        if mc_upload_count and mc_upload_count >= 5:
+        if mc_upload_count and mc_upload_count >= 10:
             st.error("You have reached your free usage limit. Upgrade to a higher version for an advanced study progress.")
 
             # Display the "Upgrade Now" button only when the limit is exceeded
