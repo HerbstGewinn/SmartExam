@@ -10,7 +10,7 @@ from supabase import create_client, Client
 st.set_page_config(
     page_title="Master Your Studies - Create Your Exam",
     page_icon="📝",
-    layout="wide",
+    layout="centered",
     initial_sidebar_state="expanded",
 )
 
