@@ -7,6 +7,13 @@ from supabase import Client
 from streamlit_supabase_auth import login_form, logout_button
 from supabase import create_client
 
+st.set_page_config(
+    page_title="Master Your Studies - Create Your Summary",
+    page_icon="📝",
+    layout="centered",
+    initial_sidebar_state="expanded",
+)
+
 # OpenAI GPT-4 Integration (Insert your OpenAI API Key via Streamlit Secrets)
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
