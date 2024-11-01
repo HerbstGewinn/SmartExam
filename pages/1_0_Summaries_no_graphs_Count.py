@@ -9,7 +9,7 @@ from supabase import create_client
 
 st.set_page_config(
     page_title="Master Your Studies - Create Your Summary",
-    page_icon🧠",
+    page_icon = "🧠",
     layout="centered",
     initial_sidebar_state="expanded",
 )
