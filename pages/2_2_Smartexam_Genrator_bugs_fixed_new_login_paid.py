@@ -94,7 +94,7 @@ def initialize_app():
         st.session_state.quiz_active = False
 
 def sidebar_reset_button():
-    if st.sidebar.button("Neu Starten"):
+    if st.sidebar.button("New Exam"):
         reset_quiz_state()
         st.session_state.app_mode = "Upload PDF & Generate Questions"
         st.session_state.quiz_active = False
