@@ -22,6 +22,8 @@ from supabase import create_client, Client
 
 __version__ = "1.1.0"
 
+show_pages_from_config()
+
 hide_streamlit_style = """
 <style>
 div[data-testid="stToolbar"] {
