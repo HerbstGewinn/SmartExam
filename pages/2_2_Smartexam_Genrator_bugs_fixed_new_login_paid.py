@@ -333,6 +333,7 @@ def pdf_upload_app():
             st.session_state.correct_answers = 0
             st.session_state.mc_test_generated = True
             st.session_state.quiz_active = True  # Indicate quiz is ready to be taken
+            increment_mc_upload_count(user_id)
             st.success("The game has been successfully created! Switching to the quiz mode...")
 
             st.session_state.app_mode = "Take the Quiz"
