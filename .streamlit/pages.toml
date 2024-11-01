@@ -24,9 +24,5 @@ path = "pages/💵 Pricing.py"
 name = "Pricing"
 icon = "💵"
 
-[[pages]]
-path = "pages/2_2_Smartexam_Genrator_bugs_fixed_new_login_paid.py"
-name = "Test_new_smartexam"
-icon = "📝"
 
 
