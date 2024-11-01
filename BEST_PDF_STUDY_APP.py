@@ -19,6 +19,7 @@ import base64
 import PyPDF2
 from streamlit_supabase_auth import login_form, logout_button
 from supabase import create_client, Client
+from st_pages import show_pages_from_config
 
 __version__ = "1.1.0"
 
