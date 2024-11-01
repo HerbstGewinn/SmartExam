@@ -291,7 +291,7 @@ def main():
         )
         
         if st.session_state.app_mode == "Upload PDF & Generate Questions":
-            pdf_upload_app()
+            pdf_upload_app(user_id)
         elif st.session_state.app_mode == "Take the Quiz" and st.session_state.quiz_active:
             mc_quiz_app()
         elif st.session_state.app_mode == "Download as PDF":
