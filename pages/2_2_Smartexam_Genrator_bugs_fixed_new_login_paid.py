@@ -297,7 +297,7 @@ def main():
         elif st.session_state.app_mode == "Download as PDF":
             download_pdf_app()
 
-def pdf_upload_app():
+def pdf_upload_app(user_id):
     st.title("Upload Your Lecture - Create Your Test Exam")
     st.subheader("Show Us the Slides and We do the Rest")
 
