@@ -71,7 +71,7 @@ def summarize_text(api_key, text):
     prompt = f"Here is the text for summarization: {text}"
 
     response = openai.chat.completions.create(
-        model="gpt-4",
+        model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": system_message},
             {"role": "user", "content": prompt}
