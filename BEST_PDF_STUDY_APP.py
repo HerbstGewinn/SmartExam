@@ -69,6 +69,12 @@ hide_default_format = """
        """
 st.markdown(hide_default_format, unsafe_allow_html=True)
 
+#Show info banner
+st.info(
+" We have updated our login functionality to Google Login, but everyone with a previous account can simply select **Don't have an account ? Sign up** for once and confirm their old credentials "
+)
+#st.info trying for informational banner
+
 #Apis
 
 SUPABASE_URL = st.secrets["SUPABASE_URL"]
