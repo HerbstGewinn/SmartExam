@@ -188,7 +188,7 @@ premium_plan_html = """
         <li>Unlimited Multiple Choice Exams</li>
         <li>Unlimited Chats with PDF</li>
         <li>Unlimited Chats with handwritten notes/pictures</li>
-        <li>Unlimited Summaries & Knowledge Graph Creation</li>
+        <li>Unlimited Summaries</li>
         <li>Early Access to new Features</li>
     </ul>
 </div>
@@ -278,9 +278,10 @@ pro_plan_html = """
     <ul class="features">
         <li>Pay once. Access for 2 Years</li>
         <li>Unlimited Multiple Choice Exams</li>
+        <li>Free Access to Notion x Smartexam Spaced Repetition Template</li>
         <li>Unlimited Chats with PDF</li>
         <li>Unlimited Chats with handwritten notes/pictures</li>
-        <li>Unlimited Summaries & Knowledge Graph Creation</li>
+        <li>Unlimited Summaries</li>
         <li>Early Access to new Features</li>
     </ul>
 </div>
@@ -356,7 +357,7 @@ free_plan_html = """
         <li>10 Multiple Choice Exams</li>
         <li>10 Chats with PDF</li>
         <li>10 Chats with handwritten notes/pictures</li>
-        <li>10 Summaries & Knowledge Graph Creation</li>
+        <li>10 Summaries</li>
     </ul>
 </div>
 """
