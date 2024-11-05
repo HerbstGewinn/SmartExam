@@ -60,7 +60,7 @@ stripe_public_key = st.secrets["stripe_api_key"]
 session = login_form(
     url=supabase_url,
     apiKey=supabase_api_key,
-    providers=["email", "github", "google"],
+    providers=["google"],
 )
 
 # If the user is not logged in, stop the app
