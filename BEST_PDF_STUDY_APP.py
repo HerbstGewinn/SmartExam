@@ -315,7 +315,7 @@ def pdf_upload_app(user_id):
     if 'messages' not in st.session_state:
         st.session_state.messages = []
     
-    uploaded_pdf = st.file_uploader("Upload a PDF document", type=["pdf"])
+    uploaded_pdf = st.file_uploader("Upload a PDF document of up to 100 pages", type=["pdf"])
     if uploaded_pdf:
         reset_quiz_state()  # Resets quiz state when a new PDF is uploaded
         pdf_text = extract_text_from_pdf(uploaded_pdf)
