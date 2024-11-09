@@ -129,7 +129,7 @@ def main():
 
     # --- Check if the user has reached the usage limit ---
     if subscription_tier == "FREE":
-        if graph_upload_count and graph_upload_count >= 10:
+        if graph_upload_count and graph_upload_count >= 5:
             st.error("Your usage limit for this month has finished. Upgrade to a higher version for an advanced study progress.")
     
             # Display the "Upgrade Now" button only when the limit is exceeded
