@@ -274,7 +274,7 @@ pro_plan_html = """
 </style>
 
 <div class="card highlighted-card">
-    <h2 class="price-title">Pro - Early Bird Lifetime Deal</h2>
+    <h2 class="price-title">Pro - Early Bird (Lifetime)</h2>
     <p class="price">$29.99</p>
     <ul class="features">
         <li>One-Time Payment. Access Forever</li>
