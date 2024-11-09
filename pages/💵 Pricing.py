@@ -182,7 +182,7 @@ premium_plan_html = """
 </style>
 
 <div class="card">
-    <h2 class="price-title">Premium Plan</h2>
+    <h2 class="price-title">Premium Pass</h2>
     <p class="price">$24.99</p>
     <ul class="features">
         <li>One-Time Payment. No Subscription !</li>
@@ -277,7 +277,7 @@ pro_plan_html = """
     <h2 class="price-title">Pro - Early Bird Deal</h2>
     <p class="price">$29.99</p>
     <ul class="features">
-        <li>One-Time Payment. Access for Forever</li>
+        <li>One-Time Payment. Access Forever</li>
         <li>Unlimited Multiple Choice Exams</li>
         <li>Free Access to Notion x Smartexam Spaced Repetition Template</li>
         <li>Unlimited Chats with PDF</li>
@@ -352,8 +352,8 @@ free_plan_html = """
 </style>
 
 <div class="card">
-    <h2 class="price-title">Free Plan</h2>
-    <p class="price">$0.00 / month</p>
+    <h2 class="price-title">Free Pass</h2>
+    <p class="price">$0.00</p>
     <ul class="features">
         <li>1 Multiple Choice Exam</li>
         <li>5 Chats with PDF</li>
@@ -377,7 +377,7 @@ with col1:
 with col2:
     st.markdown(
         premium_plan_html, unsafe_allow_html=True)
-    if st.button("SUBSCRIBE PREMIUM", key="premium-btn", use_container_width=True):
+    if st.button("BUY PREMIUM PASS", key="premium-btn", use_container_width=True):
         handle_checkout(PREMIUM_PLAN_ID)
         st.success("You have selected the Premium Pass ! Click on the Payment Link to finalize your purchase !")
         st.balloons()
