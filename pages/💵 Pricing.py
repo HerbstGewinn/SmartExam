@@ -370,7 +370,7 @@ with col1:
     st.markdown(
         free_plan_html, unsafe_allow_html=True)
     if st.button("Stick to the Free Version", key="free-btn", use_container_width=True):
-        st.success("Stick to the free version for now.Upgrade any time you want")
+        st.success("Stick to the free version for now. Upgrade any time you want")
         st.balloons()
     
 
@@ -379,15 +379,15 @@ with col2:
         premium_plan_html, unsafe_allow_html=True)
     if st.button("SUBSCRIBE PREMIUM", key="premium-btn", use_container_width=True):
         handle_checkout(PREMIUM_PLAN_ID)
-        st.success("You have selected the Premium plan! Click on the Payment Link to finalize your purchase !")
+        st.success("You have selected the Premium Pass ! Click on the Payment Link to finalize your purchase !")
         st.balloons()
     
     
 with col3:
     st.markdown(
         pro_plan_html, unsafe_allow_html=True)
-    if st.button("BUY 2 YEAR PASS", key="pro-btn", use_container_width=True):
+    if st.button("BUY PRO PASS", key="pro-btn", use_container_width=True):
         handle_checkout(PRO_PLAN_ID)
-        st.success("You have selected the 2 year Pass! Click on the Payment Link to finalize your purchase !")
+        st.success("You have selected the Pro Pass! Click on the Payment Link to finalize your purchase !")
         st.balloons()
 
