@@ -157,7 +157,7 @@ def main():
     # --- Check if the user has reached the usage limit ---
     # Check if the pdf_upload_count is greater than or equal to 10 (adjusted condition)
     if subscription_tier == "FREE":
-        if img_upload_count and img_upload_count >= 10:
+        if img_upload_count and img_upload_count >= 5:
             st.error("You have reached your free usage limit. Upgrade to a higher version for an advanced study progress.")
         
             # Display the "Upgrade Now" button only when the limit is exceeded
