@@ -183,8 +183,9 @@ premium_plan_html = """
 
 <div class="card">
     <h2 class="price-title">Premium Plan</h2>
-    <p class="price">$9.99 / month</p>
+    <p class="price">$24.99</p>
     <ul class="features">
+        <li>One-Time Payment. No Subscription !</li>
         <li>Unlimited Multiple Choice Exams</li>
         <li>Unlimited Chats with PDF</li>
         <li>Unlimited Chats with handwritten notes/pictures</li>
@@ -273,10 +274,10 @@ pro_plan_html = """
 </style>
 
 <div class="card highlighted-card">
-    <h2 class="price-title">Pro - Early Bird 2-year Deal</h2>
-    <p class="price">$64.99</p>
+    <h2 class="price-title">Pro - Early Bird Deal</h2>
+    <p class="price">$29.99</p>
     <ul class="features">
-        <li>Pay once. Access for 2 Years</li>
+        <li>One-Time Payment. Access for Forever</li>
         <li>Unlimited Multiple Choice Exams</li>
         <li>Free Access to Notion x Smartexam Spaced Repetition Template</li>
         <li>Unlimited Chats with PDF</li>
@@ -354,10 +355,10 @@ free_plan_html = """
     <h2 class="price-title">Free Plan</h2>
     <p class="price">$0.00 / month</p>
     <ul class="features">
-        <li>10 Multiple Choice Exams</li>
-        <li>10 Chats with PDF</li>
-        <li>10 Chats with handwritten notes/pictures</li>
-        <li>10 Summaries</li>
+        <li>1 Multiple Choice Exam</li>
+        <li>5 Chats with PDF</li>
+        <li>5 Chats with handwritten notes/pictures</li>
+        <li>5 Summaries</li>
     </ul>
 </div>
 """
