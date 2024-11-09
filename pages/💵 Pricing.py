@@ -74,9 +74,9 @@ with st.sidebar:
     
 # Define your plan IDs (Price IDs from Stripe)
 # PREMIUM_PLAN_ID = "price_1Q9QZ6RwYqmuXQJ5wOqzdHwq" #This is the old test ID # replace with your actual Premium Price ID
-PREMIUM_PLAN_ID = "price_1QJ1vxRwYqmuXQJ57P6vcAql"  #Live mode price ID --> NEW ONE TIME PAYMENT ! (0.99 version)
+PREMIUM_PLAN_ID = "price_1QJ1u8RwYqmuXQJ5kEU3DFqa"  #Live mode price ID --> NEW ONE TIME PAYMENT ! 
 #PRO_PLAN_ID = "price_1QEWiVRwYqmuXQJ5VD1E53cQ" #This is the old Test mode ID # replace with your actual Pro Price ID; CHANGES TO 2-YEAR PLAN DEFAULT
-PRO_PLAN_ID = "price_1QFK9jRwYqmuXQJ5GZNfwVld"  #Live Mode price ID 
+PRO_PLAN_ID = "price_1QJ1v2RwYqmuXQJ5r2ORZQum"  #Live Mode price ID one time payment
 
 # Handle Subscription Checkout
 def handle_checkout(plan_id):
