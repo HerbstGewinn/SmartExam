@@ -74,7 +74,7 @@ with st.sidebar:
     
 # Define your plan IDs (Price IDs from Stripe)
 # PREMIUM_PLAN_ID = "price_1Q9QZ6RwYqmuXQJ5wOqzdHwq" #This is the old test ID # replace with your actual Premium Price ID
-PREMIUM_PLAN_ID = "price_1QJ1u8RwYqmuXQJ5kEU3DFqa"  #Live mode price ID --> NEW ONE TIME PAYMENT ! 
+PREMIUM_PLAN_ID = "price_1QJakmRwYqmuXQJ5PAck0zht"  #Live mode price ID --> NEW ONE TIME PAYMENT ! 
 #PRO_PLAN_ID = "price_1QEWiVRwYqmuXQJ5VD1E53cQ" #This is the old Test mode ID # replace with your actual Pro Price ID; CHANGES TO 2-YEAR PLAN DEFAULT
 PRO_PLAN_ID = "price_1QJ1v2RwYqmuXQJ5r2ORZQum"  #Live Mode price ID one time payment
 
@@ -183,7 +183,7 @@ premium_plan_html = """
 
 <div class="card">
     <h2 class="price-title">Premium Pass (Lifetime)</h2>
-    <p class="price">$24.99</p>
+    <p class="price">$19.99</p>
     <ul class="features">
         <li>One-Time Payment. No Subscription !</li>
         <li>Unlimited Multiple Choice Exams</li>
