@@ -355,7 +355,7 @@ free_plan_html = """
     <h2 class="price-title">Free Pass</h2>
     <p class="price">$0.00</p>
     <ul class="features">
-        <li>1 Multiple Choice Exam</li>
+        <li>2 Multiple Choice Exams</li>
         <li>5 Chats with PDF</li>
         <li>5 Chats with handwritten notes/pictures</li>
         <li>5 Summaries</li>
