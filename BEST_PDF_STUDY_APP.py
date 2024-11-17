@@ -282,7 +282,7 @@ def main():
                     <meta http-equiv="refresh" content="0; url={redirect_url}">
                 """, unsafe_allow_html=True)
 
-            return  # Stop further interaction if the limit is reached
+            st.stop()  # Stop further interaction if the limit is reached #return changed to st.stop
 
     # If the subscription tier is "PREMIUM" or "PRO", grant full access without restriction
        #if subscription_tier in ["PREMIUM", "PRO"]:
