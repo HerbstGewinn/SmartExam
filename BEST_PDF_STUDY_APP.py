@@ -71,7 +71,7 @@ st.markdown(hide_default_format, unsafe_allow_html=True)
 
 #Show info banner
 st.info(
-" We have updated our login functionality to Google Login, but everyone with a previous account can simply select **Don't have an account ? Sign up** for once and confirm their old credentials "
+" We are currently investigating a bug with the Smartexam Generator Feature. We are really sorry for the inconvenience and are working on fixing it. "
 )
 #st.info trying for informational banner
 
