@@ -269,7 +269,7 @@ def main():
 
     # --- Check if the user has reached the usage limit ---
     # Only enforce usage limit if the subscription tier is "FREE"
-    if subscription_tier == "FREE":
+       if subscription_tier == "FREE":
            # Check if the mc_upload_count is greater than or equal to 3
            if mc_upload_count >= 3:
                st.error("You have reached your free usage limit. We want to give you a limited offer: only 19.99$ One-Time Payment for Lifetime Access to all functions.")
@@ -286,7 +286,7 @@ def main():
            else:
                st.info("Welcome, FREE user! You still have uploads available. Enjoy the features.")  # Allow access to free users with less than 3 uploads
        
-       elif subscription_tier in ["PREMIUM", "PRO"]:
+        elif subscription_tier in ["PREMIUM", "PRO"]:
            st.success("Welcome, PREMIUM/PRO user! You have unlimited access to all features.")  # Handle PREMIUM/PRO users
                # Main app content
         dotenv.load_dotenv()
