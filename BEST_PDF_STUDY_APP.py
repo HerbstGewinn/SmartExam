@@ -282,7 +282,9 @@ def main():
                     <meta http-equiv="refresh" content="0; url={redirect_url}">
                 """, unsafe_allow_html=True)
 
-            return  # Stop further interaction if the limit is reached #return changed to st.stop
+            st.stop()  # Stop further interaction if the limit is reached #return changed to st.stop
+       else:
+        st.info("Welcome, FREE user! You still have uploads available. Enjoy the features.")       #Added to allow access to free users with less than 3 uploads
     elif subscription_tier in ["PREMIUM", "PRO"]:
         st.success("Welcome, PREMIUM/PRO user! You have unlimited access to all features.")       #Added for handling the Premium/pro users 
     # If the subscription tier is "PREMIUM" or "PRO", grant full access without restriction
