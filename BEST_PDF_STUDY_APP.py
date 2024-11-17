@@ -269,7 +269,7 @@ def main():
 
     # --- Check if the user has reached the usage limit ---
     # Only enforce usage limit if the subscription tier is "FREE"
-       if subscription_tier == "FREE":
+    if subscription_tier == "FREE":
            # Check if the mc_upload_count is greater than or equal to 3
            if mc_upload_count >= 3:
                st.error("You have reached your free usage limit. We want to give you a limited offer: only 19.99$ One-Time Payment for Lifetime Access to all functions.")
@@ -286,27 +286,27 @@ def main():
            else:
                st.info("Welcome, FREE user! You still have uploads available. Enjoy the features.")  # Allow access to free users with less than 3 uploads
        
-        elif subscription_tier in ["PREMIUM", "PRO"]:
-           st.success("Welcome, PREMIUM/PRO user! You have unlimited access to all features.")  # Handle PREMIUM/PRO users
+     elif subscription_tier in ["PREMIUM", "PRO"]:
+        st.success("Welcome, PREMIUM/PRO user! You have unlimited access to all features.")  # Handle PREMIUM/PRO users
                # Main app content
-        dotenv.load_dotenv()
+ dotenv.load_dotenv()
 
-        st.sidebar.title("SmartExam Creator")
-        
-        app_mode_options = ["Upload PDF & Generate Questions", "Take the Quiz", "Download as PDF"]
-        st.session_state.app_mode = st.sidebar.selectbox(
-            "Choose the app mode", 
-            app_mode_options, 
-            index=app_mode_options.index(st.session_state.app_mode), 
-            key="app_mode_select"
-        )
-        
-        if st.session_state.app_mode == "Upload PDF & Generate Questions":
-            pdf_upload_app(user_id)
-        elif st.session_state.app_mode == "Take the Quiz" and st.session_state.quiz_active:
-            mc_quiz_app()
-        elif st.session_state.app_mode == "Download as PDF":
-            download_pdf_app()
+ st.sidebar.title("SmartExam Creator")
+ 
+ app_mode_options = ["Upload PDF & Generate Questions", "Take the Quiz", "Download as PDF"]
+ st.session_state.app_mode = st.sidebar.selectbox(
+     "Choose the app mode", 
+     app_mode_options, 
+     index=app_mode_options.index(st.session_state.app_mode), 
+     key="app_mode_select"
+ )
+ 
+ if st.session_state.app_mode == "Upload PDF & Generate Questions":
+     pdf_upload_app(user_id)
+ elif st.session_state.app_mode == "Take the Quiz" and st.session_state.quiz_active:
+     mc_quiz_app()
+ elif st.session_state.app_mode == "Download as PDF":
+     download_pdf_app()
 
 def pdf_upload_app(user_id):
     st.title("Upload Your Lecture - Create Your Test Exam")
