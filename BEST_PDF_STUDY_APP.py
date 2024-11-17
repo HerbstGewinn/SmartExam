@@ -285,7 +285,7 @@ def main():
             return  # Stop further interaction if the limit is reached
 
     # If the subscription tier is "PREMIUM" or "PRO", grant full access without restriction
-       if subscription_tier in ["PREMIUM", "PRO"]:
+       #if subscription_tier in ["PREMIUM", "PRO"]:
         # Main app content
         dotenv.load_dotenv()
 
