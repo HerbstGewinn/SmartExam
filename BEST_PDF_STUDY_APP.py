@@ -112,13 +112,32 @@ def sidebar_reset_button():
 # Main app functions
 def stream_llm_response(messages, model_params, api_key):
     client = OpenAI(api_key=api_key)
-    response = client.chat.completions.create(
-        model=model_params["model"] if "model" in model_params else "gpt-4o-mini",
-        messages=messages,
-        temperature=model_params["temperature"] if "temperature" in model_params else 0.3,
-        max_tokens=1000,
-    )
-    return response.choices[0].message.content
+    retries = 5  # Maximum number of retries
+    jitter = 0.5  # Fixed jitter value to prevent synchronized retries
+    for attempt in range(retries):
+        try:
+            # Attempt the request
+            response = client.chat.completions.create(
+                model=model_params.get("model", "gpt-4o-mini"),
+                messages=messages,
+                temperature=model_params.get("temperature", 0.3),
+                max_tokens=model_params.get("max_tokens", 4096),
+            )
+            return response.choices[0].message.content  # Return on success
+        except RateLimitError:
+            # Handle rate limiting errors with backoff
+            if attempt < retries - 1:  # Don't retry after the last attempt
+                wait_time = (2 ** attempt) + jitter  # Exponential backoff with fixed jitter
+                st.warning(f"Rate limit hit. Retrying in {wait_time:.2f} seconds...")
+                time.sleep(wait_time)
+            else:
+                st.error("Rate limit exceeded. Please try again later.")
+                st.stop()  # Gracefully stop execution
+        except OpenAIError as e:
+            # Handle other OpenAI errors
+            st.error(f"OpenAI API error: {e}")
+            st.stop()
+
 
 def extract_text_from_pdf(pdf_file):
     pdf_reader = PdfReader(pdf_file)
