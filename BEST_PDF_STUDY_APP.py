@@ -71,7 +71,7 @@ st.markdown(hide_default_format, unsafe_allow_html=True)
 
 #Show info banner
 st.info(
-" We are currently investigating a bug with the Smartexam Generator Feature. We are really sorry for the inconvenience and are working on fixing it. "
+" 30% Black Week Discount ! Code: BLACKFRIDAY30  "
 )
 #st.info trying for informational banner
 
