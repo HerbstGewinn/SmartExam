@@ -116,7 +116,7 @@ def stream_llm_response(messages, model_params, api_key):
         model=model_params["model"] if "model" in model_params else "gpt-4o-mini",
         messages=messages,
         temperature=model_params["temperature"] if "temperature" in model_params else 0.3,
-        max_tokens=4096,
+        max_tokens=1000,
     )
     return response.choices[0].message.content
 
@@ -150,7 +150,7 @@ def summarize_text(text, api_key=st.secrets["OPENAI_API_KEY"]):
     summary = stream_llm_response(messages, model_params={"model": "gpt-4o-mini", "temperature": 0.3}, api_key=api_key)
     return summary
 
-def chunk_text(text, max_tokens=3000):
+def chunk_text(text, max_tokens=2000):
     sentences = text.split('. ')
     chunks = []
     chunk = ""
