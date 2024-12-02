@@ -19,10 +19,5 @@ name = "Summarize"
 icon = "🧠"
 
 
-[[pages]]
-path = "pages/💵 Pricing.py"
-name = "Pricing"
-icon = "💵"
-
 
 
