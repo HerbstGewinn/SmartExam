@@ -71,7 +71,7 @@ st.markdown(hide_default_format, unsafe_allow_html=True)
 
 #Show info banner
 st.info(
-" 30% Black Week Discount ! Code: BLACKFRIDAY30  "
+" SmartExam is from now on officially FREE  "
 )
 #st.info trying for informational banner
 
