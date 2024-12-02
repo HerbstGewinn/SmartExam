@@ -70,10 +70,6 @@ hide_default_format = """
 st.markdown(hide_default_format, unsafe_allow_html=True)
 
 #Show info banner
-st.info(
-" SmartExam is from now on officially FREE  "
-)
-#st.info trying for informational banner
 
 #Apis
 
