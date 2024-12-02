@@ -165,7 +165,7 @@ def main():
     user_id = session['user']['id']  # Get the user ID from the session
     subscription_tier, pdf_upload_count = fetch_subscription_tier(user_id)
 
-    st.sidebar.write(f"Subscription Tier: **{subscription_tier}**")
+    
     st.sidebar.write(f"PDFs Uploaded: **{pdf_upload_count}**")
 
     # --- Check if the user has reached the usage limit ---
