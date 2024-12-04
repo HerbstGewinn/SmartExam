@@ -114,7 +114,7 @@ def stream_llm_response(messages, model_params, api_key):
         try:
             # Attempt the request
             response = client.chat.completions.create(
-                model=model_params.get("model", "gpt-4o-mini"),
+                model=model_params.get("model", "gpt-4o"),       #Test change to 4o
                 messages=messages,
                 temperature=model_params.get("temperature", 0.3),
                 max_tokens=model_params.get("max_tokens", 4096),
@@ -162,7 +162,7 @@ def summarize_text(text, api_key=st.secrets["OPENAI_API_KEY"]):
     messages = [
         {"role": "user", "content": prompt},
     ]
-    summary = stream_llm_response(messages, model_params={"model": "gpt-4o-mini", "temperature": 0.3}, api_key=api_key)
+    summary = stream_llm_response(messages, model_params={"model": "gpt-4o", "temperature": 0.3}, api_key=api_key)              #Test change to 4o
     return summary
 
 def chunk_text(text, max_tokens=2000):
@@ -188,7 +188,7 @@ def generate_mc_questions(content_text, api_key=st.secrets["OPENAI_API_KEY"]):
         f"Content:\n\n{content_text}"
     )
     messages = [{"role": "user", "content": prompt}]
-    response = stream_llm_response(messages, model_params={"model": "gpt-4o-mini", "temperature": 0.3}, api_key=api_key)
+    response = stream_llm_response(messages, model_params={"model": "gpt-4o", "temperature": 0.3}, api_key=api_key)              #Test change to 4o
     return response
 
 # Function to parse questions, with fallback to plain text display if parsing fails
